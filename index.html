@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Luxury Shop</title>
+  <title>Top Luxury Shop</title>
   <style>
     * {
       box-sizing: border-box;
@@ -13,7 +13,7 @@
 
     body {
       font-family: Arial, sans-serif;
-      background: #050505;
+      background: #060606;
       color: #fff;
       line-height: 1.5;
     }
@@ -25,63 +25,67 @@
 
     .topbar {
       background: #111;
-      color: #c9a227;
-      font-size: 13px;
+      color: #caa33a;
       padding: 10px 16px;
+      font-size: 13px;
       display: flex;
       justify-content: space-between;
       gap: 10px;
       flex-wrap: wrap;
-      border-bottom: 1px solid rgba(201, 162, 39, 0.2);
+      border-bottom: 1px solid rgba(202, 163, 58, 0.2);
     }
 
     .navbar {
+      background: #0b0b0b;
+      border-bottom: 1px solid rgba(202, 163, 58, 0.15);
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 18px 16px;
-      border-bottom: 1px solid rgba(201, 162, 39, 0.15);
-      background: #0a0a0a;
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 20;
     }
 
     .logo {
+      color: #caa33a;
       font-size: 28px;
       font-weight: 700;
       letter-spacing: 1px;
-      color: #c9a227;
     }
 
     .nav-links {
       display: flex;
-      gap: 18px;
-      font-size: 14px;
+      gap: 16px;
       flex-wrap: wrap;
-      justify-content: flex-end;
+      font-size: 14px;
     }
 
     .hero {
-      padding: 60px 20px;
-      text-align: center;
+      min-height: 420px;
       background:
-        linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.72)),
-        url('https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
-      border-bottom: 1px solid rgba(201, 162, 39, 0.15);
+        linear-gradient(rgba(0,0,0,0.68), rgba(0,0,0,0.75)),
+        url("https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1400&q=80") center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .hero-content {
+      max-width: 800px;
     }
 
     .hero h1 {
-      font-size: 38px;
-      color: #fff;
-      margin-bottom: 12px;
+      font-size: 42px;
+      margin-bottom: 14px;
     }
 
     .hero p {
-      max-width: 700px;
-      margin: 0 auto 24px;
       color: #ddd;
       font-size: 15px;
+      margin-bottom: 22px;
     }
 
     .hero-buttons {
@@ -91,8 +95,7 @@
       flex-wrap: wrap;
     }
 
-    .btn-gold,
-    .btn-dark {
+    .btn-gold, .btn-dark {
       padding: 12px 20px;
       border-radius: 8px;
       font-weight: 700;
@@ -101,40 +104,39 @@
     }
 
     .btn-gold {
-      background: #c9a227;
+      background: #caa33a;
       color: #000;
     }
 
     .btn-dark {
       background: transparent;
       color: #fff;
-      border: 1px solid #c9a227;
+      border: 1px solid #caa33a;
     }
 
     .section {
-      padding: 36px 16px;
-      max-width: 1200px;
+      max-width: 1280px;
       margin: 0 auto;
+      padding: 38px 16px;
     }
 
     .section-title {
-      font-size: 28px;
-      margin-bottom: 20px;
-      color: #fff;
       text-align: center;
+      font-size: 30px;
+      margin-bottom: 10px;
     }
 
     .section-subtitle {
       text-align: center;
-      color: #bbb;
-      max-width: 720px;
-      margin: 0 auto 28px;
+      color: #bfbfbf;
       font-size: 14px;
+      margin-bottom: 24px;
     }
 
     .category-grid,
     .brand-grid,
-    .product-grid {
+    .products-grid,
+    .feature-grid {
       display: grid;
       gap: 18px;
     }
@@ -147,48 +149,68 @@
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     }
 
-    .product-grid {
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    .products-grid {
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    }
+
+    .feature-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
 
     .card,
     .brand-card,
-    .product-card {
+    .product-card,
+    .feature-card {
       background: #0f0f0f;
-      border: 1px solid rgba(201, 162, 39, 0.25);
+      border: 1px solid rgba(202, 163, 58, 0.25);
       border-radius: 14px;
       overflow: hidden;
     }
 
     .card {
-      padding: 24px 18px;
+      padding: 22px 18px;
       text-align: center;
     }
 
     .card h3 {
-      color: #c9a227;
+      color: #caa33a;
       margin-bottom: 8px;
-      font-size: 20px;
     }
 
     .card p {
-      color: #d7d7d7;
+      color: #d3d3d3;
       font-size: 14px;
     }
 
     .brand-card {
-      padding: 22px 14px;
+      padding: 20px 14px;
       text-align: center;
       font-weight: 700;
-      color: #fff;
-      transition: 0.2s;
+      font-size: 18px;
     }
 
-    .brand-card:hover,
-    .product-card:hover,
-    .card:hover {
-      transform: translateY(-2px);
-      border-color: #c9a227;
+    .filters {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .filter-btn {
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(202, 163, 58, 0.45);
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .filter-btn.active {
+      background: #caa33a;
+      color: #000;
+      border-color: #caa33a;
     }
 
     .product-card img {
@@ -201,15 +223,14 @@
 
     .product-info {
       padding: 16px;
-      text-align: center;
     }
 
     .product-brand {
-      color: #c9a227;
-      font-size: 13px;
-      margin-bottom: 4px;
+      color: #caa33a;
+      font-size: 12px;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
     }
 
     .product-name {
@@ -219,19 +240,18 @@
     }
 
     .product-desc {
+      color: #cfcfcf;
       font-size: 13px;
-      color: #c8c8c8;
+      min-height: 54px;
       margin-bottom: 12px;
-      min-height: 40px;
     }
 
     .price-row {
       display: flex;
-      justify-content: center;
       align-items: center;
       gap: 10px;
-      margin-bottom: 14px;
       flex-wrap: wrap;
+      margin-bottom: 12px;
     }
 
     .old-price {
@@ -249,266 +269,389 @@
     .product-actions {
       display: flex;
       gap: 10px;
-      justify-content: center;
       flex-wrap: wrap;
     }
 
-    .product-actions button {
-      padding: 10px 14px;
-      border: none;
+    .buy-btn, .details-btn {
+      flex: 1;
+      min-width: 100px;
+      padding: 10px 12px;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 700;
+      border: none;
     }
 
     .buy-btn {
-      background: #c9a227;
+      background: #caa33a;
       color: #000;
     }
 
     .details-btn {
       background: transparent;
       color: #fff;
-      border: 1px solid rgba(201, 162, 39, 0.55);
+      border: 1px solid rgba(202, 163, 58, 0.45);
     }
 
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-      margin-top: 10px;
-    }
-
-    .feature-box {
-      background: #0f0f0f;
-      border: 1px solid rgba(201, 162, 39, 0.2);
-      border-radius: 12px;
+    .feature-card {
       padding: 18px;
       text-align: center;
     }
 
-    .feature-box h4 {
-      color: #c9a227;
+    .feature-card h4 {
+      color: #caa33a;
       margin-bottom: 8px;
     }
 
+    .feature-card p {
+      color: #d0d0d0;
+      font-size: 14px;
+    }
+
+    .contact-box {
+      background: #0f0f0f;
+      border: 1px solid rgba(202, 163, 58, 0.25);
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+    }
+
     footer {
+      background: #0b0b0b;
+      border-top: 1px solid rgba(202, 163, 58, 0.18);
       margin-top: 30px;
       padding: 28px 16px;
-      background: #0a0a0a;
-      border-top: 1px solid rgba(201, 162, 39, 0.15);
       text-align: center;
-      color: #bdbdbd;
+      color: #bbb;
       font-size: 14px;
     }
 
     .footer-links {
       display: flex;
       justify-content: center;
-      gap: 16px;
+      gap: 14px;
       flex-wrap: wrap;
       margin-bottom: 10px;
     }
 
     @media (max-width: 700px) {
       .navbar {
-        align-items: flex-start;
         flex-direction: column;
+        align-items: flex-start;
         gap: 12px;
       }
 
       .hero h1 {
-        font-size: 30px;
+        font-size: 32px;
       }
 
-      .nav-links {
-        gap: 10px;
+      .product-actions {
+        flex-direction: column;
       }
     }
   </style>
 </head>
 <body>
   <div class="topbar">
-    <div>Livrare rapidă • Garanție • Retur simplu</div>
-    <div>Monedă: EUR • Limba: RO • Contact: WhatsApp</div>
+    <div>Livrare rapidă • Garanție • Produse premium</div>
+    <div>Monedă: EUR • Limba: RO • Suport: WhatsApp</div>
   </div>
 
   <div class="navbar">
-    <div class="logo">LUXURY SHOP</div>
+    <div class="logo">TOP LUXURY SHOP</div>
     <div class="nav-links">
       <a href="#categorii">Categorii</a>
       <a href="#branduri">Branduri</a>
-      <a href="#produse">Top produse</a>
+      <a href="#produse">Produse</a>
       <a href="#contact">Contact</a>
     </div>
   </div>
 
   <section class="hero">
-    <h1>Luxury Watches for Men & Women</h1>
-    <p>
-      Descoperă o selecție premium de ceasuri elegante, sport și fashion.
-      Design inspirat de magazinele mari de lux, adaptat pentru propriul tău shop.
-    </p>
-    <div class="hero-buttons">
-      <button class="btn-gold" onclick="document.getElementById('produse').scrollIntoView({behavior:'smooth'})">
-        Vezi produsele
-      </button>
-      <button class="btn-dark" onclick="document.getElementById('branduri').scrollIntoView({behavior:'smooth'})">
-        Vezi brandurile
-      </button>
+    <div class="hero-content">
+      <h1>Luxury Watches & Fashion Timepieces</h1>
+      <p>
+        Magazin premium inspirat de marile shop-uri de ceasuri, pregătit să fie completat de tine
+        doar cu prețuri, produse și, ulterior, plăți reale.
+      </p>
+      <div class="hero-buttons">
+        <button class="btn-gold" onclick="document.getElementById('produse').scrollIntoView({behavior:'smooth'})">Vezi produsele</button>
+        <button class="btn-dark" onclick="document.getElementById('branduri').scrollIntoView({behavior:'smooth'})">Vezi brandurile</button>
+      </div>
     </div>
   </section>
 
   <section class="section" id="categorii">
-    <h2 class="section-title">Categorii</h2>
-    <p class="section-subtitle">
-      Poți păstra aceste blocuri și doar să schimbi numele, pozele și prețurile.
-    </p>
-
+    <h2 class="section-title">Categorii populare</h2>
+    <p class="section-subtitle">Structură pregătită pentru magazin mare, stil premium.</p>
     <div class="category-grid">
       <div class="card">
-        <h3>Ceasuri Bărbați</h3>
-        <p>Modele elegante, sport și premium pentru orice stil.</p>
+        <h3>Ceasuri bărbați</h3>
+        <p>Modele elegante, sport și premium pentru colecții moderne.</p>
       </div>
       <div class="card">
-        <h3>Ceasuri Femei</h3>
-        <p>Design modern, rafinat și branduri apreciate internațional.</p>
+        <h3>Ceasuri femei</h3>
+        <p>Design rafinat, fashion și luxury pentru orice stil.</p>
       </div>
       <div class="card">
         <h3>Top Seller</h3>
-        <p>Cele mai căutate modele din magazinul tău.</p>
+        <p>Produsele cele mai vizibile și cel mai ușor de promovat.</p>
       </div>
       <div class="card">
-        <h3>Cadouri Premium</h3>
-        <p>Produse perfecte pentru aniversări și ocazii speciale.</p>
+        <h3>Cadouri premium</h3>
+        <p>Modele potrivite pentru aniversări, sărbători și ocazii speciale.</p>
       </div>
     </div>
   </section>
 
   <section class="section" id="branduri">
-    <h2 class="section-title">Branduri populare</h2>
-    <p class="section-subtitle">
-      Aici poți pune orice branduri vrei tu. Acum sunt doar de prezentare.
-    </p>
-
+    <h2 class="section-title">Branduri</h2>
+    <p class="section-subtitle">Poți adăuga ulterior orice alte branduri vrei.</p>
     <div class="brand-grid">
       <div class="brand-card">Rolex</div>
-      <div class="brand-card">Tissot</div>
       <div class="brand-card">Omega</div>
+      <div class="brand-card">Tissot</div>
       <div class="brand-card">Guess</div>
       <div class="brand-card">Versace</div>
+      <div class="brand-card">Philipp Plein</div>
       <div class="brand-card">Swarovski</div>
+      <div class="brand-card">Thomas Sabo</div>
     </div>
   </section>
 
   <section class="section" id="produse">
-    <h2 class="section-title">Top produse</h2>
+    <h2 class="section-title">Catalog produse</h2>
     <p class="section-subtitle">
-      Aceste carduri sunt gândite să semene cu un magazin premium: brand, nume, descriere, preț vechi și preț nou.
+      Tu schimbi doar prețurile din lista de mai jos. Restul e deja pregătit.
     </p>
 
-    <div class="product-grid">
-      <div class="product-card">
-        <img src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&w=800&q=80" alt="Rolex Submariner">
-        <div class="product-info">
-          <div class="product-brand">Rolex</div>
-          <div class="product-name">Submariner</div>
-          <div class="product-desc">Model premium, stil iconic, perfect pentru un look elegant și puternic.</div>
-          <div class="price-row">
-            <div class="old-price">€8,900</div>
-            <div class="new-price">€8,000</div>
-          </div>
-          <div class="product-actions">
-            <button class="buy-btn">Cumpără</button>
-            <button class="details-btn">Detalii</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <img src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=800&q=80" alt="Rolex Daytona">
-        <div class="product-info">
-          <div class="product-brand">Rolex</div>
-          <div class="product-name">Daytona</div>
-          <div class="product-desc">Ceas sport-luxury cu design de impact, ideal pentru clienți exigenți.</div>
-          <div class="price-row">
-            <div class="old-price">€12,900</div>
-            <div class="new-price">€12,000</div>
-          </div>
-          <div class="product-actions">
-            <button class="buy-btn">Cumpără</button>
-            <button class="details-btn">Detalii</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <img src="https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=800&q=80" alt="Tissot PRX">
-        <div class="product-info">
-          <div class="product-brand">Tissot</div>
-          <div class="product-name">PRX</div>
-          <div class="product-desc">Model versatil, modern și foarte apreciat pentru raportul preț-calitate.</div>
-          <div class="price-row">
-            <div class="old-price">€750</div>
-            <div class="new-price">€600</div>
-          </div>
-          <div class="product-actions">
-            <button class="buy-btn">Cumpără</button>
-            <button class="details-btn">Detalii</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <img src="https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=800&q=80" alt="Omega Seamaster">
-        <div class="product-info">
-          <div class="product-brand">Omega</div>
-          <div class="product-name">Seamaster</div>
-          <div class="product-desc">Ceas premium cu stil sport-elegant, perfect pentru colecționari și pasionați.</div>
-          <div class="price-row">
-            <div class="old-price">€5,999</div>
-            <div class="new-price">€5,300</div>
-          </div>
-          <div class="product-actions">
-            <button class="buy-btn">Cumpără</button>
-            <button class="details-btn">Detalii</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="filters" id="filters"></div>
+    <div class="products-grid" id="productsGrid"></div>
   </section>
 
   <section class="section">
-    <h2 class="section-title">De ce să alegi magazinul nostru</h2>
-    <div class="features">
-      <div class="feature-box">
-        <h4>Produse premium</h4>
-        <p>Selecție inspirată de magazine mari de lux.</p>
+    <h2 class="section-title">Avantajele magazinului</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>Design premium</h4>
+        <p>Aspect elegant, luxury, optimizat pentru telefon.</p>
       </div>
-      <div class="feature-box">
-        <h4>Livrare rapidă</h4>
-        <p>Proces simplu și pregătit pentru comenzi reale.</p>
+      <div class="feature-card">
+        <h4>Editare ușoară</h4>
+        <p>Prețurile se schimbă rapid, într-o singură listă.</p>
       </div>
-      <div class="feature-box">
-        <h4>Design modern</h4>
-        <p>Aspect premium, optimizat pentru telefon.</p>
+      <div class="feature-card">
+        <h4>Pregătit pentru plăți</h4>
+        <p>Mai târziu schimbăm demo în plăți reale.</p>
       </div>
-      <div class="feature-box">
-        <h4>Ușor de editat</h4>
-        <p>Schimbi doar nume, preț, poză și brand.</p>
+      <div class="feature-card">
+        <h4>Scalabil</h4>
+        <p>Poți adăuga produse și branduri fără să refaci site-ul.</p>
       </div>
     </div>
   </section>
 
-  <footer id="contact">
+  <section class="section" id="contact">
+    <div class="contact-box">
+      <h2 class="section-title" style="margin-bottom: 12px;">Contact & Comenzi</h2>
+      <p style="color:#d4d4d4; margin-bottom:16px;">
+        În faza următoare facem butonul „Cumpără” să meargă pe WhatsApp, apoi trecem la checkout și plăți reale.
+      </p>
+      <button class="btn-gold">Contactează-ne</button>
+    </div>
+  </section>
+
+  <footer>
     <div class="footer-links">
       <a href="#">Contact</a>
       <a href="#">Livrare</a>
       <a href="#">Retur</a>
       <a href="#">Termeni</a>
-      <a href="#">Politica de confidențialitate</a>
+      <a href="#">Confidențialitate</a>
     </div>
-    <div>© 2026 Luxury Shop. Toate drepturile rezervate.</div>
+    <div>© 2026 Top Luxury Shop. Toate drepturile rezervate.</div>
   </footer>
+
+  <script>
+    // AICI SCHIMBI DOAR PRETURILE
+    const products = [
+      {
+        brand: "Rolex",
+        name: "Submariner",
+        oldPrice: "€8,900",
+        price: "€8,000",
+        desc: "Model premium cu design iconic și prezență puternică.",
+        image: "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        brand: "Rolex",
+        name: "Daytona",
+        oldPrice: "€12,900",
+        price: "€12,000",
+        desc: "Ceas sport-luxury, apreciat pentru stil și exclusivitate.",
+        image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        brand: "Omega",
+        name: "Seamaster",
+        oldPrice: "€5,999",
+        price: "€5,300",
+        desc: "Model premium cu eleganță sportivă și finisaje moderne.",
+        image: "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        brand: "Omega",
+        name: "Speedmaster",
+        oldPrice: "€6,200",
+        price: "€5,850",
+        desc: "Un model celebru, ideal pentru clienți care caută rafinament.",
+        image: "https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        brand: "Tissot",
+        name: "PRX",
+        oldPrice: "€750",
+        price: "€600",
+        desc: "Model modern, foarte cerut, excelent pentru daily wear.",
+        image: "https://images.unsplash.com/photo-1617043786394-f977fa12eddf?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        brand: "Tissot",
+        name: "Seastar",
+        oldPrice: "€980",
+        price: "€790",
+        desc: "Stil sport-elegant, foarte bun pentru colecții versatile.",
+        image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        brand: "Guess",
+        name: "Classic Gold",
+        oldPrice: "€280",
+        price: "€229",
+        desc: "Ceas fashion premium, ideal pentru un look modern și curat.",
+        image: "https://images.unsplash.com/photo-1619134778706-7015533a6150?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        brand: "Guess",
+        name: "Silver Edge",
+        oldPrice: "€260",
+        price: "€219",
+        desc: "Design atractiv, foarte potrivit pentru zona fashion-luxury.",
+        image: "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        brand: "Versace",
+        name: "Greca Gold",
+        oldPrice: "€1,150",
+        price: "€970",
+        desc: "Aspect puternic și luxos, cu detalii care atrag imediat.",
+        image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        brand: "Versace",
+        name: "Icon Black",
+        oldPrice: "€1,050",
+        price: "€899",
+        desc: "Model premium cu design îndrăzneț și stil fashion exclusivist.",
+        image: "https://images.unsplash.com/photo-1509048191080-d2f4ab4b2d8f?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        brand: "Philipp Plein",
+        name: "Chrono Luxe",
+        oldPrice: "€890",
+        price: "€760",
+        desc: "Model statement, potrivit pentru clienți care vor impact vizual.",
+        image: "https://images.unsplash.com/photo-1511370235399-1802cae1d32f?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        brand: "Philipp Plein",
+        name: "Black Royal",
+        oldPrice: "€920",
+        price: "€799",
+        desc: "Design masculin, premium, orientat spre segmentul fashion bold.",
+        image: "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        brand: "Swarovski",
+        name: "Crystal Shine",
+        oldPrice: "€420",
+        price: "€349",
+        desc: "Model elegant pentru stil rafinat, luminos și feminin.",
+        image: "https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        brand: "Swarovski",
+        name: "Rose Elegance",
+        oldPrice: "€450",
+        price: "€379",
+        desc: "Ceas fashion premium cu aspect curat și foarte atrăgător.",
+        image: "https://images.unsplash.com/photo-1434056886845-dac89ffe9b56?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        brand: "Thomas Sabo",
+        name: "Urban Silver",
+        oldPrice: "€310",
+        price: "€259",
+        desc: "Design minimalist, bun pentru segmentul modern și casual-premium.",
+        image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        brand: "Thomas Sabo",
+        name: "Night Steel",
+        oldPrice: "€330",
+        price: "€279",
+        desc: "Model echilibrat, elegant, cu potențial bun de conversie.",
+        image: "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=900&q=80"
+      }
+    ];
+
+    const filtersEl = document.getElementById("filters");
+    const productsGrid = document.getElementById("productsGrid");
+
+    const brands = ["Toate", ...new Set(products.map(p => p.brand))];
+    let activeBrand = "Toate";
+
+    function renderFilters() {
+      filtersEl.innerHTML = brands.map(brand => `
+        <button class="filter-btn ${brand === activeBrand ? 'active' : ''}" onclick="setFilter('${brand}')">
+          ${brand}
+        </button>
+      `).join("");
+    }
+
+    function renderProducts() {
+      const filtered = activeBrand === "Toate"
+        ? products
+        : products.filter(p => p.brand === activeBrand);
+
+      productsGrid.innerHTML = filtered.map(product => `
+        <div class="product-card">
+          <img src="${product.image}" alt="${product.name}">
+          <div class="product-info">
+            <div class="product-brand">${product.brand}</div>
+            <div class="product-name">${product.name}</div>
+            <div class="product-desc">${product.desc}</div>
+            <div class="price-row">
+              <div class="old-price">${product.oldPrice}</div>
+              <div class="new-price">${product.price}</div>
+            </div>
+            <div class="product-actions">
+              <button class="buy-btn">Cumpără</button>
+              <button class="details-btn">Detalii</button>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function setFilter(brand) {
+      activeBrand = brand;
+      renderFilters();
+      renderProducts();
+    }
+
+    renderFilters();
+    renderProducts();
+  </script>
 </body>
 </html>
