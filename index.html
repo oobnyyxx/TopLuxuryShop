@@ -459,6 +459,7 @@
       <h3>Admin produse</h3>
       <p>Aici adaugi produse fără să mai umbli în cod.</p>
 
+     <input id="productId" type="hidden">
       <div class="admin-grid">
         <div class="field-wrap">
           <label for="productName">Nume produs</label>
@@ -501,7 +502,7 @@
       </div>
 
       <div class="admin-actions">
-  <button class="btn-gold" id="saveProductBtn">Adaugă produs</button>
+  <button class="btn-gold" id="saveProductBtn">Salvează produs</button>
   <button class="btn-dark" id="saveBrandBtn" type="button">Adaugă brand</button>
 </div>
 
@@ -803,6 +804,225 @@
 
     document.querySelectorAll(".delete-product-btn").forEach(btn => {
       btn.addEventListener("click", async () => {
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    getDocs,
+    addDoc,
+    deleteDoc,
+    doc,
+    updateDoc
+  } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDhoR_hh96P7qqDCYv1rcw3KN5oTkivlX8",
+    authDomain: "topluxuryshop.firebaseapp.com",
+    projectId: "topluxuryshop",
+    storageBucket: "topluxuryshop.firebasestorage.app",
+    messagingSenderId: "163597143700",
+    appId: "1:163597143700:web:cfe4719a22927b31202e81",
+    measurementId: "G-YR04PSBQBN"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const filtersEl = document.getElementById("filters");
+  const productsGrid = document.getElementById("productsGrid");
+  const adminToggle = document.getElementById("adminToggle");
+  const adminSection = document.getElementById("adminSection");
+  const saveProductBtn = document.getElementById("saveProductBtn");
+  const saveBrandBtn = document.getElementById("saveBrandBtn");
+  const adminStatus = document.getElementById("adminStatus");
+
+  const productId = document.getElementById("productId");
+  const productName = document.getElementById("productName");
+  const productBrand = document.getElementById("productBrand");
+  const productPrice = document.getElementById("productPrice");
+  const productOldPrice = document.getElementById("productOldPrice");
+  const productImage = document.getElementById("productImage");
+  const productDescription = document.getElementById("productDescription");
+
+  const brandNameInput = document.getElementById("brandNameInput");
+  const brandSlugInput = document.getElementById("brandSlugInput");
+
+  const adminBrandsList = document.getElementById("adminBrandsList");
+  const adminProductsList = document.getElementById("adminProductsList");
+
+  let allProducts = [];
+  let allBrands = [];
+  let activeBrand = "Toate";
+
+  function formatPrice(value) {
+    if (value === undefined || value === null || value === "") return "";
+    return `€${value}`;
+  }
+
+  function slugToLabel(slug) {
+    const found = allBrands.find(b => b.slug === slug);
+    return found ? found.name : slug || "";
+  }
+
+  function showStatus(message, type) {
+    adminStatus.className = "status-box";
+    adminStatus.textContent = message;
+    if (type === "success") adminStatus.classList.add("status-success");
+    if (type === "error") adminStatus.classList.add("status-error");
+  }
+
+  function resetProductForm() {
+    productId.value = "";
+    productName.value = "";
+    productPrice.value = "";
+    productOldPrice.value = "";
+    productImage.value = "";
+    productDescription.value = "";
+    if (productBrand.options.length > 0) {
+      productBrand.selectedIndex = 0;
+    }
+    saveProductBtn.textContent = "Salvează produs";
+  }
+
+  function fillProductForm(product) {
+    productId.value = product.id || "";
+    productName.value = product.name || "";
+    productBrand.value = product.brand || "";
+    productPrice.value = product.price ?? "";
+    productOldPrice.value = product.oldPrice ?? "";
+    productImage.value = product.image || "";
+    productDescription.value = product.description || "";
+    saveProductBtn.textContent = "Actualizează produs";
+    adminSection.classList.add("show");
+    adminSection.scrollIntoView({ behavior: "smooth" });
+  }
+
+  function renderBrandOptions() {
+    productBrand.innerHTML = allBrands
+      .filter(b => b.active === true)
+      .map(b => `<option value="${b.slug}">${b.name}</option>`)
+      .join("");
+  }
+
+  function renderFilters() {
+    const brands = ["Toate", ...allBrands.filter(b => b.active === true).map(b => b.name)];
+
+    filtersEl.innerHTML = brands
+      .map(
+        brand => `
+          <button class="filter-btn ${brand === activeBrand ? "active" : ""}" data-brand="${brand}">
+            ${brand}
+          </button>
+        `
+      )
+      .join("");
+
+    filtersEl.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activeBrand = btn.dataset.brand;
+        renderFilters();
+        renderProducts();
+      });
+    });
+  }
+
+  function renderProducts() {
+    const filtered =
+      activeBrand === "Toate"
+        ? allProducts
+        : allProducts.filter(p => slugToLabel(p.brand) === activeBrand);
+
+    if (!filtered.length) {
+      productsGrid.innerHTML = `
+        <div class="card" style="grid-column: 1 / -1;">
+          <h3>Nu există produse</h3>
+          <p>Adaugă produse din admin și vor apărea aici automat.</p>
+        </div>
+      `;
+      return;
+    }
+
+    productsGrid.innerHTML = filtered
+      .map(
+        product => `
+          <div class="product-card">
+            <img src="${product.image || "https://via.placeholder.com/800x600?text=Luxury+Watch"}" alt="${product.name}">
+            <div class="product-info">
+              <div class="product-brand">${slugToLabel(product.brand)}</div>
+              <div class="product-name">${product.name || ""}</div>
+              <div class="product-desc">${product.description || ""}</div>
+              <div class="price-row">
+                ${product.oldPrice ? `<div class="old-price">${formatPrice(product.oldPrice)}</div>` : ""}
+                <div class="new-price">${formatPrice(product.price)}</div>
+              </div>
+              <div class="product-actions">
+                <button class="buy-btn">Cumpără</button>
+                <button class="details-btn">Detalii</button>
+              </div>
+            </div>
+          </div>
+        `
+      )
+      .join("");
+  }
+
+  function renderAdminBrands() {
+    if (!allBrands.length) {
+      adminBrandsList.innerHTML = `<div class="card"><p>Nu există branduri.</p></div>`;
+      return;
+    }
+
+    adminBrandsList.innerHTML = allBrands.map(brand => `
+      <div class="feature-card">
+        <h4>${brand.name}</h4>
+        <p>Slug: ${brand.slug}</p>
+        <button class="details-btn delete-brand-btn" data-id="${brand.id}" style="margin-top:10px;">Șterge brand</button>
+      </div>
+    `).join("");
+
+    document.querySelectorAll(".delete-brand-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (!confirm("Sigur vrei să ștergi acest brand?")) return;
+        try {
+          await deleteDoc(doc(db, "brands", btn.dataset.id));
+          showStatus("Brand șters cu succes.", "success");
+          await loadAll();
+        } catch (error) {
+          console.error(error);
+          showStatus("Eroare la ștergerea brandului.", "error");
+        }
+      });
+    });
+  }
+
+  function renderAdminProducts() {
+    if (!allProducts.length) {
+      adminProductsList.innerHTML = `<div class="card"><p>Nu există produse.</p></div>`;
+      return;
+    }
+
+    adminProductsList.innerHTML = allProducts.map(product => `
+      <div class="feature-card">
+        <h4>${product.name}</h4>
+        <p>Brand: ${slugToLabel(product.brand)}</p>
+        <p>Preț: ${formatPrice(product.price)}</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:10px;">
+          <button class="details-btn edit-product-btn" data-id="${product.id}">Editează</button>
+          <button class="details-btn delete-product-btn" data-id="${product.id}">Șterge produs</button>
+        </div>
+      </div>
+    `).join("");
+
+    document.querySelectorAll(".edit-product-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const product = allProducts.find(p => p.id === btn.dataset.id);
+        if (product) fillProductForm(product);
+      });
+    });
+
+    document.querySelectorAll(".delete-product-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
         if (!confirm("Sigur vrei să ștergi acest produs?")) return;
         try {
           await deleteDoc(doc(db, "products", btn.dataset.id));
@@ -880,6 +1100,7 @@
   });
 
   saveProductBtn.addEventListener("click", async () => {
+    const id = productId.value.trim();
     const name = productName.value.trim();
     const brand = productBrand.value;
     const price = Number(productPrice.value);
@@ -893,23 +1114,31 @@
     }
 
     try {
-      await addDoc(collection(db, "products"), {
-        name,
-        brand,
-        price,
-        oldPrice,
-        image,
-        description,
-        active: true
-      });
+      if (id) {
+        await updateDoc(doc(db, "products", id), {
+          name,
+          brand,
+          price,
+          oldPrice,
+          image,
+          description,
+          active: true
+        });
+        showStatus("Produs actualizat cu succes.", "success");
+      } else {
+        await addDoc(collection(db, "products"), {
+          name,
+          brand,
+          price,
+          oldPrice,
+          image,
+          description,
+          active: true
+        });
+        showStatus("Produs adăugat cu succes.", "success");
+      }
 
-      productName.value = "";
-      productPrice.value = "";
-      productOldPrice.value = "";
-      productImage.value = "";
-      productDescription.value = "";
-
-      showStatus("Produs adăugat cu succes.", "success");
+      resetProductForm();
       await loadAll();
     } catch (error) {
       console.error(error);
