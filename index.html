@@ -471,169 +471,94 @@
     </div>
     <div>© 2026 Top Luxury Shop. Toate drepturile rezervate.</div>
   </footer>
+  
+   <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    getDocs
+  } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-  <script>
-    // AICI SCHIMBI DOAR PRETURILE
-    const products = [
-      {
-        brand: "Rolex",
-        name: "Submariner",
-        oldPrice: "€8,900",
-        price: "€8,000",
-        desc: "Model premium cu design iconic și prezență puternică.",
-        image: "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        brand: "Rolex",
-        name: "Daytona",
-        oldPrice: "€12,900",
-        price: "€12,000",
-        desc: "Ceas sport-luxury, apreciat pentru stil și exclusivitate.",
-        image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        brand: "Omega",
-        name: "Seamaster",
-        oldPrice: "€5,999",
-        price: "€5,300",
-        desc: "Model premium cu eleganță sportivă și finisaje moderne.",
-        image: "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        brand: "Omega",
-        name: "Speedmaster",
-        oldPrice: "€6,200",
-        price: "€5,850",
-        desc: "Un model celebru, ideal pentru clienți care caută rafinament.",
-        image: "https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        brand: "Tissot",
-        name: "PRX",
-        oldPrice: "€750",
-        price: "€600",
-        desc: "Model modern, foarte cerut, excelent pentru daily wear.",
-        image: "https://images.unsplash.com/photo-1617043786394-f977fa12eddf?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        brand: "Tissot",
-        name: "Seastar",
-        oldPrice: "€980",
-        price: "€790",
-        desc: "Stil sport-elegant, foarte bun pentru colecții versatile.",
-        image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        brand: "Guess",
-        name: "Classic Gold",
-        oldPrice: "€280",
-        price: "€229",
-        desc: "Ceas fashion premium, ideal pentru un look modern și curat.",
-        image: "https://images.unsplash.com/photo-1619134778706-7015533a6150?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        brand: "Guess",
-        name: "Silver Edge",
-        oldPrice: "€260",
-        price: "€219",
-        desc: "Design atractiv, foarte potrivit pentru zona fashion-luxury.",
-        image: "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        brand: "Versace",
-        name: "Greca Gold",
-        oldPrice: "€1,150",
-        price: "€970",
-        desc: "Aspect puternic și luxos, cu detalii care atrag imediat.",
-        image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        brand: "Versace",
-        name: "Icon Black",
-        oldPrice: "€1,050",
-        price: "€899",
-        desc: "Model premium cu design îndrăzneț și stil fashion exclusivist.",
-        image: "https://images.unsplash.com/photo-1509048191080-d2f4ab4b2d8f?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        brand: "Philipp Plein",
-        name: "Chrono Luxe",
-        oldPrice: "€890",
-        price: "€760",
-        desc: "Model statement, potrivit pentru clienți care vor impact vizual.",
-        image: "https://images.unsplash.com/photo-1511370235399-1802cae1d32f?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        brand: "Philipp Plein",
-        name: "Black Royal",
-        oldPrice: "€920",
-        price: "€799",
-        desc: "Design masculin, premium, orientat spre segmentul fashion bold.",
-        image: "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        brand: "Swarovski",
-        name: "Crystal Shine",
-        oldPrice: "€420",
-        price: "€349",
-        desc: "Model elegant pentru stil rafinat, luminos și feminin.",
-        image: "https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        brand: "Swarovski",
-        name: "Rose Elegance",
-        oldPrice: "€450",
-        price: "€379",
-        desc: "Ceas fashion premium cu aspect curat și foarte atrăgător.",
-        image: "https://images.unsplash.com/photo-1434056886845-dac89ffe9b56?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        brand: "Thomas Sabo",
-        name: "Urban Silver",
-        oldPrice: "€310",
-        price: "€259",
-        desc: "Design minimalist, bun pentru segmentul modern și casual-premium.",
-        image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        brand: "Thomas Sabo",
-        name: "Night Steel",
-        oldPrice: "€330",
-        price: "€279",
-        desc: "Model echilibrat, elegant, cu potențial bun de conversie.",
-        image: "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=900&q=80"
-      }
-    ];
+  const firebaseConfig = {
+    apiKey: "AIzaSyDhoR_hh96P7qqDCYv1rcw3KN5oTkivlX8",
+    authDomain: "topluxuryshop.firebaseapp.com",
+    projectId: "topluxuryshop",
+    storageBucket: "topluxuryshop.firebasestorage.app",
+    messagingSenderId: "163597143700",
+    appId: "1:163597143700:web:cfe4719a22927b31202e81",
+    measurementId: "G-YR04PSBQBN"
+  };
 
-    const filtersEl = document.getElementById("filters");
-    const productsGrid = document.getElementById("productsGrid");
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-    const brands = ["Toate", ...new Set(products.map(p => p.brand))];
-    let activeBrand = "Toate";
+  const filtersEl = document.getElementById("filters");
+  const productsGrid = document.getElementById("productsGrid");
 
-    function renderFilters() {
-      filtersEl.innerHTML = brands.map(brand => `
-        <button class="filter-btn ${brand === activeBrand ? 'active' : ''}" onclick="setFilter('${brand}')">
+  let allProducts = [];
+  let activeBrand = "Toate";
+
+  function formatPrice(value) {
+    if (value === undefined || value === null || value === "") return "";
+    return `€${value}`;
+  }
+
+  function renderFilters() {
+    const brands = ["Toate", ...new Set(allProducts.map(p => p.brand))];
+
+    filtersEl.innerHTML = brands
+      .map(
+        brand => `
+        <button class="filter-btn ${brand === activeBrand ? "active" : ""}" data-brand="${brand}">
           ${brand}
         </button>
-      `).join("");
+      `
+      )
+      .join("");
+
+    const buttons = filtersEl.querySelectorAll(".filter-btn");
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        activeBrand = btn.dataset.brand;
+        renderFilters();
+        renderProducts();
+      });
+    });
+  }
+
+  function renderProducts() {
+    const filtered =
+      activeBrand === "Toate"
+        ? allProducts
+        : allProducts.filter(p => p.brand === activeBrand);
+
+    if (!filtered.length) {
+      productsGrid.innerHTML = `
+        <div class="card" style="grid-column: 1 / -1;">
+          <h3>Nu există produse</h3>
+          <p>Adaugă produse din Firebase și vor apărea aici automat.</p>
+        </div>
+      `;
+      return;
     }
 
-    function renderProducts() {
-      const filtered = activeBrand === "Toate"
-        ? products
-        : products.filter(p => p.brand === activeBrand);
-
-      productsGrid.innerHTML = filtered.map(product => `
+    productsGrid.innerHTML = filtered
+      .map(
+        product => `
         <div class="product-card">
-          <img src="${product.image}" alt="${product.name}">
+          <img src="${product.image || "https://via.placeholder.com/800x600?text=Luxury+Watch"}" alt="${product.name}">
           <div class="product-info">
-            <div class="product-brand">${product.brand}</div>
-            <div class="product-name">${product.name}</div>
-            <div class="product-desc">${product.desc}</div>
+            <div class="product-brand">${product.brand || ""}</div>
+            <div class="product-name">${product.name || ""}</div>
+            <div class="product-desc">${product.description || ""}</div>
             <div class="price-row">
-              <div class="old-price">${product.oldPrice}</div>
-              <div class="new-price">${product.price}</div>
+              ${
+                product.oldPrice
+                  ? `<div class="old-price">${formatPrice(product.oldPrice)}</div>`
+                  : ""
+              }
+              <div class="new-price">${formatPrice(product.price)}</div>
             </div>
             <div class="product-actions">
               <button class="buy-btn">Cumpără</button>
@@ -641,17 +566,54 @@
             </div>
           </div>
         </div>
-      `).join("");
-    }
+      `
+      )
+      .join("");
+  }
 
-    function setFilter(brand) {
-      activeBrand = brand;
+  async function loadProducts() {
+    try {
+      const snapshot = await getDocs(collection(db, "products"));
+
+      allProducts = snapshot.docs
+        .map(doc => ({ id: doc.id, ...doc.data() }))
+        .filter(product => product.active === true)
+        .map(product => ({
+          ...product,
+          brand:
+            product.brand === "rolex"
+              ? "Rolex"
+              : product.brand === "omega"
+              ? "Omega"
+              : product.brand === "tissot"
+              ? "Tissot"
+              : product.brand === "guess"
+              ? "Guess"
+              : product.brand === "versace"
+              ? "Versace"
+              : product.brand === "philipp-plein"
+              ? "Philipp Plein"
+              : product.brand === "swarovski"
+              ? "Swarovski"
+              : product.brand === "thomas-sabo"
+              ? "Thomas Sabo"
+              : product.brand
+          }));
+
       renderFilters();
       renderProducts();
+    } catch (error) {
+      console.error("Eroare la încărcarea produselor:", error);
+      productsGrid.innerHTML = `
+        <div class="card" style="grid-column: 1 / -1;">
+          <h3>Eroare la încărcare</h3>
+          <p>Verifică Firestore sau spune-mi ce eroare apare în site.</p>
+        </div>
+      `;
     }
+  }
 
-    renderFilters();
-    renderProducts();
-  </script>
+  loadProducts();
+</script>
 </body>
 </html>
