@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Top Luxury Shop</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: Arial, sans-serif;
@@ -18,10 +14,7 @@
       line-height: 1.5;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+    a { text-decoration: none; color: inherit; }
 
     .topbar {
       background: #111;
@@ -59,10 +52,21 @@
       gap: 16px;
       flex-wrap: wrap;
       font-size: 14px;
+      align-items: center;
+    }
+
+    .admin-toggle {
+      background: #caa33a;
+      color: #000;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
     .hero {
-      min-height: 420px;
+      min-height: 320px;
       background:
         linear-gradient(rgba(0,0,0,0.68), rgba(0,0,0,0.75)),
         url("https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1400&q=80") center/cover no-repeat;
@@ -73,9 +77,7 @@
       padding: 40px 20px;
     }
 
-    .hero-content {
-      max-width: 800px;
-    }
+    .hero-content { max-width: 800px; }
 
     .hero h1 {
       font-size: 42px;
@@ -141,26 +143,16 @@
       gap: 18px;
     }
 
-    .category-grid {
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    }
-
-    .brand-grid {
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    }
-
-    .products-grid {
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    }
-
-    .feature-grid {
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    }
+    .category-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+    .brand-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+    .products-grid { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+    .feature-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 
     .card,
     .brand-card,
     .product-card,
-    .feature-card {
+    .feature-card,
+    .admin-box {
       background: #0f0f0f;
       border: 1px solid rgba(202, 163, 58, 0.25);
       border-radius: 14px;
@@ -221,9 +213,7 @@
       background: #111;
     }
 
-    .product-info {
-      padding: 16px;
-    }
+    .product-info { padding: 16px; }
 
     .product-brand {
       color: #caa33a;
@@ -316,6 +306,93 @@
       text-align: center;
     }
 
+    .admin-section {
+      display: none;
+    }
+
+    .admin-section.show {
+      display: block;
+    }
+
+    .admin-box {
+      padding: 18px;
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .admin-box h3 {
+      color: #caa33a;
+      margin-bottom: 8px;
+    }
+
+    .admin-box p {
+      color: #ccc;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .field-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field-wrap label {
+      font-size: 13px;
+      color: #d9d9d9;
+    }
+
+    .field-wrap input,
+    .field-wrap select,
+    .field-wrap textarea {
+      background: #0a0a0a;
+      color: #fff;
+      border: 1px solid rgba(202, 163, 58, 0.35);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    .field-wrap textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .status-box {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .status-success {
+      display: block;
+      background: rgba(20, 110, 40, 0.2);
+      border: 1px solid rgba(70, 200, 100, 0.4);
+      color: #9cf0ae;
+    }
+
+    .status-error {
+      display: block;
+      background: rgba(120, 20, 20, 0.2);
+      border: 1px solid rgba(220, 90, 90, 0.4);
+      color: #ffb4b4;
+    }
+
     footer {
       background: #0b0b0b;
       border-top: 1px solid rgba(202, 163, 58, 0.18);
@@ -341,13 +418,9 @@
         gap: 12px;
       }
 
-      .hero h1 {
-        font-size: 32px;
-      }
+      .hero h1 { font-size: 32px; }
 
-      .product-actions {
-        flex-direction: column;
-      }
+      .product-actions { flex-direction: column; }
     }
   </style>
 </head>
@@ -364,6 +437,7 @@
       <a href="#branduri">Branduri</a>
       <a href="#produse">Produse</a>
       <a href="#contact">Contact</a>
+      <button class="admin-toggle" id="adminToggle">Admin</button>
     </div>
   </div>
 
@@ -371,13 +445,66 @@
     <div class="hero-content">
       <h1>Luxury Watches & Fashion Timepieces</h1>
       <p>
-        Magazin premium inspirat de marile shop-uri de ceasuri, pregătit să fie completat de tine
-        doar cu prețuri, produse și, ulterior, plăți reale.
+        Magazin premium conectat la Firebase. Acum poți adăuga produse direct din site.
       </p>
       <div class="hero-buttons">
         <button class="btn-gold" onclick="document.getElementById('produse').scrollIntoView({behavior:'smooth'})">Vezi produsele</button>
         <button class="btn-dark" onclick="document.getElementById('branduri').scrollIntoView({behavior:'smooth'})">Vezi brandurile</button>
       </div>
+    </div>
+  </section>
+
+  <section class="section admin-section" id="adminSection">
+    <div class="admin-box">
+      <h3>Admin produse</h3>
+      <p>Aici adaugi produse fără să mai umbli în cod.</p>
+
+      <div class="admin-grid">
+        <div class="field-wrap">
+          <label for="productName">Nume produs</label>
+          <input id="productName" type="text" placeholder="Ex: Rolex Submariner">
+        </div>
+
+        <div class="field-wrap">
+          <label for="productBrand">Brand</label>
+          <select id="productBrand">
+            <option value="rolex">Rolex</option>
+            <option value="omega">Omega</option>
+            <option value="tissot">Tissot</option>
+            <option value="guess">Guess</option>
+            <option value="versace">Versace</option>
+            <option value="philipp-plein">Philipp Plein</option>
+            <option value="swarovski">Swarovski</option>
+            <option value="thomas-sabo">Thomas Sabo</option>
+          </select>
+        </div>
+
+        <div class="field-wrap">
+          <label for="productPrice">Preț</label>
+          <input id="productPrice" type="number" placeholder="Ex: 8000">
+        </div>
+
+        <div class="field-wrap">
+          <label for="productOldPrice">Preț vechi</label>
+          <input id="productOldPrice" type="number" placeholder="Ex: 8900">
+        </div>
+
+        <div class="field-wrap" style="grid-column: 1 / -1;">
+          <label for="productImage">Link poză</label>
+          <input id="productImage" type="text" placeholder="Lipește linkul imaginii">
+        </div>
+
+        <div class="field-wrap" style="grid-column: 1 / -1;">
+          <label for="productDescription">Descriere</label>
+          <textarea id="productDescription" placeholder="Scrie descrierea produsului"></textarea>
+        </div>
+      </div>
+
+      <div class="admin-actions">
+        <button class="btn-gold" id="saveProductBtn">Adaugă produs</button>
+      </div>
+
+      <div id="adminStatus" class="status-box"></div>
     </div>
   </section>
 
@@ -422,7 +549,7 @@
   <section class="section" id="produse">
     <h2 class="section-title">Catalog produse</h2>
     <p class="section-subtitle">
-      Tu schimbi doar prețurile din lista de mai jos. Restul e deja pregătit.
+      Produsele vin acum direct din Firebase.
     </p>
 
     <div class="filters" id="filters"></div>
@@ -438,7 +565,7 @@
       </div>
       <div class="feature-card">
         <h4>Editare ușoară</h4>
-        <p>Prețurile se schimbă rapid, într-o singură listă.</p>
+        <p>Acum poți adăuga produse direct din site.</p>
       </div>
       <div class="feature-card">
         <h4>Pregătit pentru plăți</h4>
@@ -455,7 +582,7 @@
     <div class="contact-box">
       <h2 class="section-title" style="margin-bottom: 12px;">Contact & Comenzi</h2>
       <p style="color:#d4d4d4; margin-bottom:16px;">
-        În faza următoare facem butonul „Cumpără” să meargă pe WhatsApp, apoi trecem la checkout și plăți reale.
+        Următorul pas: facem butonul „Cumpără” pe WhatsApp și apoi checkout cu plăți reale.
       </p>
       <button class="btn-gold">Contactează-ne</button>
     </div>
@@ -471,149 +598,206 @@
     </div>
     <div>© 2026 Top Luxury Shop. Toate drepturile rezervate.</div>
   </footer>
-  
-   <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-  import {
-    getFirestore,
-    collection,
-    getDocs
-  } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDhoR_hh96P7qqDCYv1rcw3KN5oTkivlX8",
-    authDomain: "topluxuryshop.firebaseapp.com",
-    projectId: "topluxuryshop",
-    storageBucket: "topluxuryshop.firebasestorage.app",
-    messagingSenderId: "163597143700",
-    appId: "1:163597143700:web:cfe4719a22927b31202e81",
-    measurementId: "G-YR04PSBQBN"
-  };
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      addDoc
+    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhoR_hh96P7qqDCYv1rcw3KN5oTkivlX8",
+      authDomain: "topluxuryshop.firebaseapp.com",
+      projectId: "topluxuryshop",
+      storageBucket: "topluxuryshop.firebasestorage.app",
+      messagingSenderId: "163597143700",
+      appId: "1:163597143700:web:cfe4719a22927b31202e81",
+      measurementId: "G-YR04PSBQBN"
+    };
 
-  const filtersEl = document.getElementById("filters");
-  const productsGrid = document.getElementById("productsGrid");
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-  let allProducts = [];
-  let activeBrand = "Toate";
+    const filtersEl = document.getElementById("filters");
+    const productsGrid = document.getElementById("productsGrid");
+    const adminToggle = document.getElementById("adminToggle");
+    const adminSection = document.getElementById("adminSection");
+    const saveProductBtn = document.getElementById("saveProductBtn");
+    const adminStatus = document.getElementById("adminStatus");
 
-  function formatPrice(value) {
-    if (value === undefined || value === null || value === "") return "";
-    return `€${value}`;
-  }
+    const productName = document.getElementById("productName");
+    const productBrand = document.getElementById("productBrand");
+    const productPrice = document.getElementById("productPrice");
+    const productOldPrice = document.getElementById("productOldPrice");
+    const productImage = document.getElementById("productImage");
+    const productDescription = document.getElementById("productDescription");
 
-  function renderFilters() {
-    const brands = ["Toate", ...new Set(allProducts.map(p => p.brand))];
+    let allProducts = [];
+    let activeBrand = "Toate";
 
-    filtersEl.innerHTML = brands
-      .map(
-        brand => `
-        <button class="filter-btn ${brand === activeBrand ? "active" : ""}" data-brand="${brand}">
-          ${brand}
-        </button>
-      `
-      )
-      .join("");
+    function formatPrice(value) {
+      if (value === undefined || value === null || value === "") return "";
+      return `€${value}`;
+    }
 
-    const buttons = filtersEl.querySelectorAll(".filter-btn");
-    buttons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        activeBrand = btn.dataset.brand;
+    function brandLabel(slug) {
+      const map = {
+        "rolex": "Rolex",
+        "omega": "Omega",
+        "tissot": "Tissot",
+        "guess": "Guess",
+        "versace": "Versace",
+        "philipp-plein": "Philipp Plein",
+        "swarovski": "Swarovski",
+        "thomas-sabo": "Thomas Sabo"
+      };
+      return map[slug] || slug || "";
+    }
+
+    function renderFilters() {
+      const brands = ["Toate", ...new Set(allProducts.map(p => brandLabel(p.brand)))];
+
+      filtersEl.innerHTML = brands
+        .map(
+          brand => `
+            <button class="filter-btn ${brand === activeBrand ? "active" : ""}" data-brand="${brand}">
+              ${brand}
+            </button>
+          `
+        )
+        .join("");
+
+      const buttons = filtersEl.querySelectorAll(".filter-btn");
+      buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeBrand = btn.dataset.brand;
+          renderFilters();
+          renderProducts();
+        });
+      });
+    }
+
+    function renderProducts() {
+      const filtered =
+        activeBrand === "Toate"
+          ? allProducts
+          : allProducts.filter(p => brandLabel(p.brand) === activeBrand);
+
+      if (!filtered.length) {
+        productsGrid.innerHTML = `
+          <div class="card" style="grid-column: 1 / -1;">
+            <h3>Nu există produse</h3>
+            <p>Adaugă produse din Firebase și vor apărea aici automat.</p>
+          </div>
+        `;
+        return;
+      }
+
+      productsGrid.innerHTML = filtered
+        .map(
+          product => `
+            <div class="product-card">
+              <img src="${product.image || "https://via.placeholder.com/800x600?text=Luxury+Watch"}" alt="${product.name}">
+              <div class="product-info">
+                <div class="product-brand">${brandLabel(product.brand)}</div>
+                <div class="product-name">${product.name || ""}</div>
+                <div class="product-desc">${product.description || ""}</div>
+                <div class="price-row">
+                  ${product.oldPrice ? `<div class="old-price">${formatPrice(product.oldPrice)}</div>` : ""}
+                  <div class="new-price">${formatPrice(product.price)}</div>
+                </div>
+                <div class="product-actions">
+                  <button class="buy-btn">Cumpără</button>
+                  <button class="details-btn">Detalii</button>
+                </div>
+              </div>
+            </div>
+          `
+        )
+        .join("");
+    }
+
+    async function loadProducts() {
+      try {
+        const snapshot = await getDocs(collection(db, "products"));
+
+        allProducts = snapshot.docs
+          .map(doc => ({ id: doc.id, ...doc.data() }))
+          .filter(product => product.active === true);
+
         renderFilters();
         renderProducts();
-      });
-    });
-  }
-
-  function renderProducts() {
-    const filtered =
-      activeBrand === "Toate"
-        ? allProducts
-        : allProducts.filter(p => p.brand === activeBrand);
-
-    if (!filtered.length) {
-      productsGrid.innerHTML = `
-        <div class="card" style="grid-column: 1 / -1;">
-          <h3>Nu există produse</h3>
-          <p>Adaugă produse din Firebase și vor apărea aici automat.</p>
-        </div>
-      `;
-      return;
-    }
-
-    productsGrid.innerHTML = filtered
-      .map(
-        product => `
-        <div class="product-card">
-          <img src="${product.image || "https://via.placeholder.com/800x600?text=Luxury+Watch"}" alt="${product.name}">
-          <div class="product-info">
-            <div class="product-brand">${product.brand || ""}</div>
-            <div class="product-name">${product.name || ""}</div>
-            <div class="product-desc">${product.description || ""}</div>
-            <div class="price-row">
-              ${
-                product.oldPrice
-                  ? `<div class="old-price">${formatPrice(product.oldPrice)}</div>`
-                  : ""
-              }
-              <div class="new-price">${formatPrice(product.price)}</div>
-            </div>
-            <div class="product-actions">
-              <button class="buy-btn">Cumpără</button>
-              <button class="details-btn">Detalii</button>
-            </div>
+      } catch (error) {
+        console.error(error);
+        productsGrid.innerHTML = `
+          <div class="card" style="grid-column: 1 / -1;">
+            <h3>Eroare la încărcare</h3>
+            <p>Verifică Firestore sau spune-mi ce eroare apare.</p>
           </div>
-        </div>
-      `
-      )
-      .join("");
-  }
-
-  async function loadProducts() {
-    try {
-      const snapshot = await getDocs(collection(db, "products"));
-
-      allProducts = snapshot.docs
-        .map(doc => ({ id: doc.id, ...doc.data() }))
-        .filter(product => product.active === true)
-        .map(product => ({
-          ...product,
-          brand:
-            product.brand === "rolex"
-              ? "Rolex"
-              : product.brand === "omega"
-              ? "Omega"
-              : product.brand === "tissot"
-              ? "Tissot"
-              : product.brand === "guess"
-              ? "Guess"
-              : product.brand === "versace"
-              ? "Versace"
-              : product.brand === "philipp-plein"
-              ? "Philipp Plein"
-              : product.brand === "swarovski"
-              ? "Swarovski"
-              : product.brand === "thomas-sabo"
-              ? "Thomas Sabo"
-              : product.brand
-          }));
-
-      renderFilters();
-      renderProducts();
-    } catch (error) {
-      console.error("Eroare la încărcarea produselor:", error);
-      productsGrid.innerHTML = `
-        <div class="card" style="grid-column: 1 / -1;">
-          <h3>Eroare la încărcare</h3>
-          <p>Verifică Firestore sau spune-mi ce eroare apare în site.</p>
-        </div>
-      `;
+        `;
+      }
     }
-  }
 
-  loadProducts();
-</script>
+    adminToggle.addEventListener("click", () => {
+      const pin = prompt("Introdu codul admin");
+      if (pin === "1234") {
+        adminSection.classList.toggle("show");
+        adminSection.scrollIntoView({ behavior: "smooth" });
+      } else {
+        alert("Cod greșit");
+      }
+    });
+
+    function showStatus(message, type) {
+      adminStatus.className = "status-box";
+      adminStatus.textContent = message;
+      if (type === "success") adminStatus.classList.add("status-success");
+      if (type === "error") adminStatus.classList.add("status-error");
+    }
+
+    saveProductBtn.addEventListener("click", async () => {
+      const name = productName.value.trim();
+      const brand = productBrand.value;
+      const price = Number(productPrice.value);
+      const oldPrice = productOldPrice.value ? Number(productOldPrice.value) : null;
+      const image = productImage.value.trim();
+      const description = productDescription.value.trim();
+
+      if (!name || !brand || !price || !image || !description) {
+        showStatus("Completează toate câmpurile obligatorii.", "error");
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, "products"), {
+          name,
+          brand,
+          price,
+          oldPrice,
+          image,
+          description,
+          active: true
+        });
+
+        productName.value = "";
+        productBrand.value = "rolex";
+        productPrice.value = "";
+        productOldPrice.value = "";
+        productImage.value = "";
+        productDescription.value = "";
+
+        showStatus("Produs adăugat cu succes.", "success");
+        await loadProducts();
+      } catch (error) {
+        console.error(error);
+        showStatus("Eroare la salvare. Verifică Firestore rules.", "error");
+      }
+    });
+
+    loadProducts();
+  </script>
 </body>
 </html>
