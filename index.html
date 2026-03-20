@@ -1,51 +1,374 @@
 <!DOCTYPE html>
-<html>
+<html lang="ro">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Luxury Shop</title>
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      background: black;
-      color: white;
-      font-family: Arial;
+      font-family: Arial, sans-serif;
+      background: #050505;
+      color: #fff;
+      line-height: 1.5;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .topbar {
+      background: #111;
+      color: #c9a227;
+      font-size: 13px;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid rgba(201, 162, 39, 0.2);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 16px;
+      border-bottom: 1px solid rgba(201, 162, 39, 0.15);
+      background: #0a0a0a;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #c9a227;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      font-size: 14px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .hero {
+      padding: 60px 20px;
+      text-align: center;
+      background:
+        linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.72)),
+        url('https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+      border-bottom: 1px solid rgba(201, 162, 39, 0.15);
+    }
+
+    .hero h1 {
+      font-size: 38px;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: 0 auto 24px;
+      color: #ddd;
+      font-size: 15px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-gold,
+    .btn-dark {
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-gold {
+      background: #c9a227;
+      color: #000;
+    }
+
+    .btn-dark {
+      background: transparent;
+      color: #fff;
+      border: 1px solid #c9a227;
+    }
+
+    .section {
+      padding: 36px 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #fff;
       text-align: center;
     }
 
-    .product {
-      border: 1px solid gold;
-      margin: 20px;
-      padding: 20px;
-      border-radius: 10px;
+    .section-subtitle {
+      text-align: center;
+      color: #bbb;
+      max-width: 720px;
+      margin: 0 auto 28px;
+      font-size: 14px;
     }
 
-    button {
-      background: gold;
-      padding: 10px;
+    .category-grid,
+    .brand-grid,
+    .product-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .category-grid {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    .brand-grid {
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+
+    .product-grid {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .card,
+    .brand-card,
+    .product-card {
+      background: #0f0f0f;
+      border: 1px solid rgba(201, 162, 39, 0.25);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .card {
+      padding: 24px 18px;
+      text-align: center;
+    }
+
+    .card h3 {
+      color: #c9a227;
+      margin-bottom: 8px;
+      font-size: 20px;
+    }
+
+    .card p {
+      color: #d7d7d7;
+      font-size: 14px;
+    }
+
+    .brand-card {
+      padding: 22px 14px;
+      text-align: center;
+      font-weight: 700;
+      color: #fff;
+      transition: 0.2s;
+    }
+
+    .brand-card:hover,
+    .product-card:hover,
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: #c9a227;
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      background: #111;
+    }
+
+    .product-info {
+      padding: 16px;
+      text-align: center;
+    }
+
+    .product-brand {
+      color: #c9a227;
+      font-size: 13px;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .product-name {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .product-desc {
+      font-size: 13px;
+      color: #c8c8c8;
+      margin-bottom: 12px;
+      min-height: 40px;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .old-price {
+      color: #8f8f8f;
+      text-decoration: line-through;
+      font-size: 14px;
+    }
+
+    .new-price {
+      color: #fff;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .product-actions button {
+      padding: 10px 14px;
       border: none;
+      border-radius: 8px;
       cursor: pointer;
+      font-weight: 700;
+    }
+
+    .buy-btn {
+      background: #c9a227;
+      color: #000;
+    }
+
+    .details-btn {
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(201, 162, 39, 0.55);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .feature-box {
+      background: #0f0f0f;
+      border: 1px solid rgba(201, 162, 39, 0.2);
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .feature-box h4 {
+      color: #c9a227;
+      margin-bottom: 8px;
+    }
+
+    footer {
+      margin-top: 30px;
+      padding: 28px 16px;
+      background: #0a0a0a;
+      border-top: 1px solid rgba(201, 162, 39, 0.15);
+      text-align: center;
+      color: #bdbdbd;
+      font-size: 14px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 700px) {
+      .navbar {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .hero h1 {
+        font-size: 30px;
+      }
+
+      .nav-links {
+        gap: 10px;
+      }
     }
   </style>
 </head>
 <body>
-
-  <h1>Luxury Watches</h1>
-
-  <div class="product">
-    <h2>Rolex Submariner</h2>
-    <p>8000€</p>
-    <button>Cumpără</button>
+  <div class="topbar">
+    <div>Livrare rapidă • Garanție • Retur simplu</div>
+    <div>Monedă: EUR • Limba: RO • Contact: WhatsApp</div>
   </div>
 
-  <div class="product">
-    <h2>Rolex Daytona</h2>
-    <p>12000€</p>
-    <button>Cumpără</button>
+  <div class="navbar">
+    <div class="logo">LUXURY SHOP</div>
+    <div class="nav-links">
+      <a href="#categorii">Categorii</a>
+      <a href="#branduri">Branduri</a>
+      <a href="#produse">Top produse</a>
+      <a href="#contact">Contact</a>
+    </div>
   </div>
 
-  <div class="product">
-    <h2>Tissot PRX</h2>
-    <p>600€</p>
-    <button>Cumpără</button>
-  </div>
+  <section class="hero">
+    <h1>Luxury Watches for Men & Women</h1>
+    <p>
+      Descoperă o selecție premium de ceasuri elegante, sport și fashion.
+      Design inspirat de magazinele mari de lux, adaptat pentru propriul tău shop.
+    </p>
+    <div class="hero-buttons">
+      <button class="btn-gold" onclick="document.getElementById('produse').scrollIntoView({behavior:'smooth'})">
+        Vezi produsele
+      </button>
+      <button class="btn-dark" onclick="document.getElementById('branduri').scrollIntoView({behavior:'smooth'})">
+        Vezi brandurile
+      </button>
+    </div>
+  </section>
 
-</body>
-</html>
+  <section class="section" id="categorii">
+    <h2 class="section-title">Categorii</h2>
+    <p class="section-subtitle">
+      Poți păstra aceste blocuri și doar să schimbi numele, pozele și prețurile.
+    </p>
+
+    <div class="category-grid">
+      <div class="card">
+        <h3>Ceasuri Bărbați</h3>
+        <p>Modele elegante, sport și premium pentru orice stil.</p>
+      </div>
+      <div class="card">
+        <h3>Ce
