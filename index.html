@@ -240,6 +240,23 @@
       border-color: #caa33a;
     }
 
+    .product-card {
+      position: relative;
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #caa33a;
+      color: #000;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 999px;
+      z-index: 2;
+    }
+
     .product-card img,
     .similar-card-image {
       width: 100%;
@@ -408,6 +425,23 @@
       resize: vertical;
     }
 
+    .checkbox-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #0a0a0a;
+      color: #fff;
+      border: 1px solid rgba(202, 163, 58, 0.35);
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 48px;
+    }
+
+    .checkbox-wrap input {
+      width: auto;
+      margin: 0;
+    }
+
     .admin-actions,
     .login-actions {
       display: flex;
@@ -456,6 +490,7 @@
 
     .product-detail-card {
       padding: 22px;
+      position: relative;
     }
 
     .product-detail-brand {
@@ -598,8 +633,8 @@
 
   <section class="section admin-section" id="adminSection">
     <div class="admin-box">
-      <h3>Admin produse</h3>
-      <p>Aici adaugi, editezi și ștergi produse fără să mai umbli în cod.</p>
+      <h3>Admin produse avansat</h3>
+      <p>Aici adaugi, editezi și controlezi produsele fără să mai umbli în cod.</p>
 
       <input id="productId" type="hidden">
 
@@ -622,6 +657,42 @@
         <div class="field-wrap">
           <label for="productOldPrice">Preț vechi</label>
           <input id="productOldPrice" type="number" placeholder="Ex: 8900">
+        </div>
+
+        <div class="field-wrap">
+          <label for="productStock">Stoc</label>
+          <input id="productStock" type="number" placeholder="Ex: 5">
+        </div>
+
+        <div class="field-wrap">
+          <label for="productSku">SKU / Cod produs</label>
+          <input id="productSku" type="text" placeholder="Ex: RLX-SUB-001">
+        </div>
+
+        <div class="field-wrap">
+          <label for="productBadge">Badge</label>
+          <select id="productBadge">
+            <option value="">Nimic</option>
+            <option value="Nou">Nou</option>
+            <option value="Reducere">Reducere</option>
+            <option value="Bestseller">Bestseller</option>
+          </select>
+        </div>
+
+        <div class="field-wrap">
+          <label>Opțiuni produs</label>
+          <div class="checkbox-wrap">
+            <input id="productActive" type="checkbox" checked>
+            <label for="productActive">Produs activ</label>
+          </div>
+        </div>
+
+        <div class="field-wrap">
+          <label>&nbsp;</label>
+          <div class="checkbox-wrap">
+            <input id="productFeatured" type="checkbox">
+            <label for="productFeatured">Produs recomandat</label>
+          </div>
         </div>
 
         <div class="field-wrap" style="grid-column: 1 / -1;">
@@ -707,6 +778,12 @@
     <h2 class="section-title">Branduri</h2>
     <p class="section-subtitle">Brandurile active sunt gestionate din Firebase.</p>
     <div class="brand-grid" id="publicBrandsList"></div>
+  </section>
+
+  <section class="section" id="featuredSection">
+    <h2 class="section-title">Produse recomandate</h2>
+    <p class="section-subtitle">Produsele marcate ca recomandate apar aici automat.</p>
+    <div class="products-grid" id="featuredProductsGrid"></div>
   </section>
 
   <section class="section" id="produse">
@@ -810,6 +887,8 @@
     const filtersEl = document.getElementById("filters");
     const productsGrid = document.getElementById("productsGrid");
     const publicBrandsList = document.getElementById("publicBrandsList");
+    const featuredProductsGrid = document.getElementById("featuredProductsGrid");
+    const featuredSection = document.getElementById("featuredSection");
     const searchInput = document.getElementById("searchInput");
     const sortSelect = document.getElementById("sortSelect");
 
@@ -842,6 +921,11 @@
     const productBrand = document.getElementById("productBrand");
     const productPrice = document.getElementById("productPrice");
     const productOldPrice = document.getElementById("productOldPrice");
+    const productStock = document.getElementById("productStock");
+    const productSku = document.getElementById("productSku");
+    const productBadge = document.getElementById("productBadge");
+    const productActive = document.getElementById("productActive");
+    const productFeatured = document.getElementById("productFeatured");
     const productImage = document.getElementById("productImage");
     const productDescription = document.getElementById("productDescription");
 
@@ -881,6 +965,7 @@
       categoriesSection.style.display = "block";
       brandsSection.style.display = "block";
       productsSection.style.display = "block";
+      featuredSection.style.display = "block";
       productPageSection.classList.remove("show");
     }
 
@@ -889,6 +974,7 @@
       categoriesSection.style.display = "none";
       brandsSection.style.display = "none";
       productsSection.style.display = "none";
+      featuredSection.style.display = "none";
       productPageSection.classList.add("show");
     }
 
@@ -904,6 +990,11 @@
 
     function normalizeSlug(text) {
       return (text || "").trim().toLowerCase().replace(/\s+/g, "-");
+    }
+
+    function getBadgeHtml(badge) {
+      if (!badge) return "";
+      return `<div class="product-badge">${badge}</div>`;
     }
 
     function showStatus(message, type) {
@@ -962,6 +1053,11 @@
       productName.value = "";
       productPrice.value = "";
       productOldPrice.value = "";
+      productStock.value = "";
+      productSku.value = "";
+      productBadge.value = "";
+      productActive.checked = true;
+      productFeatured.checked = false;
       productImage.value = "";
       productDescription.value = "";
       if (productBrand.options.length > 0) {
@@ -976,6 +1072,11 @@
       productBrand.value = product.brand || "";
       productPrice.value = product.price ?? "";
       productOldPrice.value = product.oldPrice ?? "";
+      productStock.value = product.stock ?? "";
+      productSku.value = product.sku || "";
+      productBadge.value = product.badge || "";
+      productActive.checked = product.active === true;
+      productFeatured.checked = product.featured === true;
       productImage.value = product.image || "";
       productDescription.value = product.description || "";
       saveProductBtn.textContent = "Actualizează produs";
@@ -1037,10 +1138,14 @@
           const brandName = slugToLabel(p.brand).toLowerCase();
           const name = (p.name || "").toLowerCase();
           const desc = (p.description || "").toLowerCase();
+          const sku = (p.sku || "").toLowerCase();
+          const badge = (p.badge || "").toLowerCase();
           return (
             name.includes(q) ||
             brandName.includes(q) ||
-            desc.includes(q)
+            desc.includes(q) ||
+            sku.includes(q) ||
+            badge.includes(q)
           );
         });
       }
@@ -1075,6 +1180,7 @@
         .map(
           (product) => `
             <div class="product-card">
+              ${getBadgeHtml(product.badge)}
               <img src="${product.image || "https://via.placeholder.com/800x600?text=Luxury+Watch"}" alt="${product.name}">
               <div class="product-info">
                 <div class="product-brand">${slugToLabel(product.brand)}</div>
@@ -1101,6 +1207,43 @@
       });
     }
 
+    function renderFeaturedProducts() {
+      const featured = allProducts.filter((p) => p.featured === true);
+
+      if (!featured.length) {
+        featuredProductsGrid.innerHTML = `
+          <div class="card" style="grid-column:1 / -1;">
+            <p>Nu există încă produse recomandate.</p>
+          </div>
+        `;
+        return;
+      }
+
+      featuredProductsGrid.innerHTML = featured.slice(0, 8).map((product) => `
+        <div class="product-card">
+          ${getBadgeHtml(product.badge)}
+          <img src="${product.image || "https://via.placeholder.com/800x600?text=Luxury+Watch"}" alt="${product.name}">
+          <div class="product-info">
+            <div class="product-brand">${slugToLabel(product.brand)}</div>
+            <div class="product-name">${product.name || ""}</div>
+            <div class="price-row">
+              ${product.oldPrice ? `<div class="old-price">${formatPrice(product.oldPrice)}</div>` : ""}
+              <div class="new-price">${formatPrice(product.price)}</div>
+            </div>
+            <div class="product-actions">
+              <button class="details-btn featured-details-btn" data-id="${product.id}">Detalii</button>
+            </div>
+          </div>
+        </div>
+      `).join("");
+
+      document.querySelectorAll(".featured-details-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          openProductPage(btn.dataset.id);
+        });
+      });
+    }
+
     function renderProductDetail(product) {
       productDetailContainer.innerHTML = `
         <div class="product-detail-layout">
@@ -1109,6 +1252,7 @@
           </div>
 
           <div class="product-detail-card">
+            ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ""}
             <div class="product-detail-brand">${slugToLabel(product.brand)}</div>
             <h1 class="product-detail-title">${product.name || ""}</h1>
 
@@ -1128,9 +1272,11 @@
 
             <div class="product-detail-meta">
               <div><strong>Brand:</strong> ${slugToLabel(product.brand)}</div>
-              <div><strong>Status:</strong> Disponibil</div>
-              <div><strong>Tip produs:</strong> Ceas premium</div>
-              <div><strong>Magazin:</strong> Top Luxury Shop</div>
+              <div><strong>Status:</strong> ${product.active ? "Disponibil" : "Inactiv"}</div>
+              <div><strong>Stoc:</strong> ${product.stock ?? 0}</div>
+              <div><strong>SKU:</strong> ${product.sku || "-"}</div>
+              <div><strong>Badge:</strong> ${product.badge || "-"}</div>
+              <div><strong>Recomandat:</strong> ${product.featured ? "Da" : "Nu"}</div>
             </div>
           </div>
         </div>
@@ -1158,6 +1304,7 @@
 
       similarProductsGrid.innerHTML = similar.map((item) => `
         <div class="similar-card">
+          ${getBadgeHtml(item.badge)}
           <img class="similar-card-image" src="${item.image || "https://via.placeholder.com/800x600?text=Luxury+Watch"}" alt="${item.name}">
           <div class="similar-card-body">
             <div class="product-brand">${slugToLabel(item.brand)}</div>
@@ -1257,6 +1404,11 @@
               <h4>${product.name}</h4>
               <p>Brand: ${slugToLabel(product.brand)}</p>
               <p>Preț: ${formatPrice(product.price)}</p>
+              <p>Stoc: ${product.stock ?? 0}</p>
+              <p>SKU: ${product.sku || "-"}</p>
+              <p>Badge: ${product.badge || "-"}</p>
+              <p>Activ: ${product.active ? "Da" : "Nu"}</p>
+              <p>Featured: ${product.featured ? "Da" : "Nu"}</p>
               <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:10px;">
                 <button class="details-btn edit-product-btn" data-id="${product.id}">Editează</button>
                 <button class="details-btn delete-product-btn" data-id="${product.id}">Șterge produs</button>
@@ -1316,6 +1468,7 @@
         renderPublicBrands();
         renderFilters();
         renderProducts();
+        renderFeaturedProducts();
         renderAdminBrands();
         renderAdminProducts();
         handleProductPageView();
@@ -1426,6 +1579,11 @@
       const brand = productBrand.value;
       const price = Number(productPrice.value);
       const oldPrice = productOldPrice.value ? Number(productOldPrice.value) : null;
+      const stock = productStock.value ? Number(productStock.value) : 0;
+      const sku = productSku.value.trim();
+      const badge = productBadge.value;
+      const active = productActive.checked;
+      const featured = productFeatured.checked;
       const image = productImage.value.trim();
       const description = productDescription.value.trim();
 
@@ -1434,28 +1592,26 @@
         return;
       }
 
+      const payload = {
+        name,
+        brand,
+        price,
+        oldPrice,
+        stock,
+        sku,
+        badge,
+        active,
+        featured,
+        image,
+        description
+      };
+
       try {
         if (id) {
-          await updateDoc(doc(db, "products", id), {
-            name,
-            brand,
-            price,
-            oldPrice,
-            image,
-            description,
-            active: true
-          });
+          await updateDoc(doc(db, "products", id), payload);
           showStatus("Produs actualizat cu succes.", "success");
         } else {
-          await addDoc(collection(db, "products"), {
-            name,
-            brand,
-            price,
-            oldPrice,
-            image,
-            description,
-            active: true
-          });
+          await addDoc(collection(db, "products"), payload);
           showStatus("Produs adăugat cu succes.", "success");
         }
 
