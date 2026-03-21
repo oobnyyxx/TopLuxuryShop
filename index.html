@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Top Luxury Shop</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: Arial, sans-serif;
@@ -18,10 +14,7 @@
       line-height: 1.5;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+    a { text-decoration: none; color: inherit; }
 
     .topbar {
       background: #111;
@@ -62,7 +55,8 @@
       align-items: center;
     }
 
-    .admin-toggle {
+    .admin-toggle,
+    .logout-btn {
       background: #caa33a;
       color: #000;
       border: none;
@@ -70,6 +64,10 @@
       border-radius: 8px;
       font-weight: 700;
       cursor: pointer;
+    }
+
+    .logout-btn {
+      display: none;
     }
 
     .hero {
@@ -84,9 +82,7 @@
       padding: 40px 20px;
     }
 
-    .hero-content {
-      max-width: 800px;
-    }
+    .hero-content { max-width: 800px; }
 
     .hero h1 {
       font-size: 42px;
@@ -152,27 +148,17 @@
       gap: 18px;
     }
 
-    .category-grid {
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    }
-
-    .brand-grid {
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    }
-
-    .products-grid {
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    }
-
-    .feature-grid {
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    }
+    .category-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+    .brand-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+    .products-grid { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+    .feature-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 
     .card,
     .brand-card,
     .product-card,
     .feature-card,
-    .admin-box {
+    .admin-box,
+    .login-box {
       background: #0f0f0f;
       border: 1px solid rgba(202, 163, 58, 0.25);
       border-radius: 14px;
@@ -233,9 +219,7 @@
       background: #111;
     }
 
-    .product-info {
-      padding: 16px;
-    }
+    .product-info { padding: 16px; }
 
     .product-brand {
       color: #caa33a;
@@ -328,31 +312,37 @@
       text-align: center;
     }
 
+    .login-section,
     .admin-section {
       display: none;
     }
 
+    .login-section.show,
     .admin-section.show {
       display: block;
     }
 
+    .login-box,
     .admin-box {
       padding: 18px;
     }
 
-    .admin-grid {
+    .admin-grid,
+    .login-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 14px;
       margin-top: 18px;
     }
 
-    .admin-box h3 {
+    .admin-box h3,
+    .login-box h3 {
       color: #caa33a;
       margin-bottom: 8px;
     }
 
-    .admin-box p {
+    .admin-box p,
+    .login-box p {
       color: #ccc;
       font-size: 14px;
       margin-bottom: 12px;
@@ -386,7 +376,8 @@
       resize: vertical;
     }
 
-    .admin-actions {
+    .admin-actions,
+    .login-actions {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
@@ -440,13 +431,9 @@
         gap: 12px;
       }
 
-      .hero h1 {
-        font-size: 32px;
-      }
+      .hero h1 { font-size: 32px; }
 
-      .product-actions {
-        flex-direction: column;
-      }
+      .product-actions { flex-direction: column; }
     }
   </style>
 </head>
@@ -464,19 +451,43 @@
       <a href="#produse">Produse</a>
       <a href="#contact">Contact</a>
       <button class="admin-toggle" id="adminToggle">Admin</button>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
     </div>
   </div>
 
   <section class="hero">
     <div class="hero-content">
       <h1>Luxury Watches & Fashion Timepieces</h1>
-      <p>
-        Magazin premium conectat la Firebase. Poți adăuga, edita și șterge produse direct din site.
-      </p>
+      <p>Magazin premium conectat la Firebase. Poți adăuga, edita și șterge produse direct din site.</p>
       <div class="hero-buttons">
         <button class="btn-gold" onclick="document.getElementById('produse').scrollIntoView({behavior:'smooth'})">Vezi produsele</button>
         <button class="btn-dark" onclick="document.getElementById('branduri').scrollIntoView({behavior:'smooth'})">Vezi brandurile</button>
       </div>
+    </div>
+  </section>
+
+  <section class="section login-section" id="loginSection">
+    <div class="login-box">
+      <h3>Login admin</h3>
+      <p>Intră cu emailul și parola create în Firebase Authentication.</p>
+
+      <div class="login-grid">
+        <div class="field-wrap">
+          <label for="adminEmail">Email admin</label>
+          <input id="adminEmail" type="email" placeholder="admin@email.com">
+        </div>
+
+        <div class="field-wrap">
+          <label for="adminPassword">Parolă</label>
+          <input id="adminPassword" type="password" placeholder="parola">
+        </div>
+      </div>
+
+      <div class="login-actions">
+        <button class="btn-gold" id="loginBtn">Login</button>
+      </div>
+
+      <div id="loginStatus" class="status-box"></div>
     </div>
   </section>
 
@@ -582,10 +593,7 @@
 
   <section class="section" id="produse">
     <h2 class="section-title">Catalog produse</h2>
-    <p class="section-subtitle">
-      Produsele vin direct din Firebase.
-    </p>
-
+    <p class="section-subtitle">Produsele vin direct din Firebase.</p>
     <div class="filters" id="filters"></div>
     <div class="products-grid" id="productsGrid"></div>
   </section>
@@ -615,9 +623,7 @@
   <section class="section" id="contact">
     <div class="contact-box">
       <h2 class="section-title" style="margin-bottom: 12px;">Contact & Comenzi</h2>
-      <p style="color:#d4d4d4; margin-bottom:16px;">
-        Următorul pas: facem butonul „Cumpără” pe WhatsApp și apoi checkout cu plăți reale.
-      </p>
+      <p style="color:#d4d4d4; margin-bottom:16px;">Următorul pas: facem butonul „Cumpără” pe WhatsApp și apoi checkout cu plăți reale.</p>
       <button class="btn-gold">Contactează-ne</button>
     </div>
   </section>
@@ -645,6 +651,13 @@
       updateDoc
     } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyDhoR_hh96P7qqDCYv1rcw3KN5oTkivlX8",
       authDomain: "topluxuryshop.firebaseapp.com",
@@ -657,12 +670,21 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     const filtersEl = document.getElementById("filters");
     const productsGrid = document.getElementById("productsGrid");
     const publicBrandsList = document.getElementById("publicBrandsList");
 
     const adminToggle = document.getElementById("adminToggle");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const loginSection = document.getElementById("loginSection");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginStatus = document.getElementById("loginStatus");
+    const adminEmail = document.getElementById("adminEmail");
+    const adminPassword = document.getElementById("adminPassword");
+
     const adminSection = document.getElementById("adminSection");
     const saveProductBtn = document.getElementById("saveProductBtn");
     const saveBrandBtn = document.getElementById("saveBrandBtn");
@@ -686,6 +708,7 @@
     let allProducts = [];
     let allBrands = [];
     let activeBrand = "Toate";
+    let currentUser = null;
 
     function formatPrice(value) {
       if (value === undefined || value === null || value === "") return "";
@@ -698,10 +721,7 @@
     }
 
     function normalizeSlug(text) {
-      return (text || "")
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g, "-");
+      return (text || "").trim().toLowerCase().replace(/\s+/g, "-");
     }
 
     function showStatus(message, type) {
@@ -709,6 +729,27 @@
       adminStatus.textContent = message;
       if (type === "success") adminStatus.classList.add("status-success");
       if (type === "error") adminStatus.classList.add("status-error");
+    }
+
+    function showLoginStatus(message, type) {
+      loginStatus.className = "status-box";
+      loginStatus.textContent = message;
+      if (type === "success") loginStatus.classList.add("status-success");
+      if (type === "error") loginStatus.classList.add("status-error");
+    }
+
+    function setAdminUI(isLoggedIn) {
+      if (isLoggedIn) {
+        adminSection.classList.add("show");
+        loginSection.classList.remove("show");
+        logoutBtn.style.display = "inline-block";
+        adminToggle.textContent = "Admin activ";
+      } else {
+        adminSection.classList.remove("show");
+        loginSection.classList.remove("show");
+        logoutBtn.style.display = "none";
+        adminToggle.textContent = "Admin";
+      }
     }
 
     function resetProductForm() {
@@ -839,6 +880,10 @@
 
       document.querySelectorAll(".delete-brand-btn").forEach((btn) => {
         btn.addEventListener("click", async () => {
+          if (!currentUser) {
+            showStatus("Trebuie să fii logat ca admin.", "error");
+            return;
+          }
           if (!confirm("Sigur vrei să ștergi acest brand?")) return;
           try {
             await deleteDoc(doc(db, "brands", btn.dataset.id));
@@ -876,6 +921,10 @@
 
       document.querySelectorAll(".edit-product-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
+          if (!currentUser) {
+            showStatus("Trebuie să fii logat ca admin.", "error");
+            return;
+          }
           const product = allProducts.find((p) => p.id === btn.dataset.id);
           if (product) fillProductForm(product);
         });
@@ -883,6 +932,10 @@
 
       document.querySelectorAll(".delete-product-btn").forEach((btn) => {
         btn.addEventListener("click", async () => {
+          if (!currentUser) {
+            showStatus("Trebuie să fii logat ca admin.", "error");
+            return;
+          }
           if (!confirm("Sigur vrei să ștergi acest produs?")) return;
           try {
             await deleteDoc(doc(db, "products", btn.dataset.id));
@@ -925,13 +978,46 @@
     }
 
     adminToggle.addEventListener("click", () => {
-      const pin = prompt("Introdu codul admin");
-      if (pin === "1234") {
+      if (currentUser) {
         adminSection.classList.toggle("show");
         adminSection.scrollIntoView({ behavior: "smooth" });
       } else {
-        alert("Cod greșit");
+        loginSection.classList.toggle("show");
+        loginSection.scrollIntoView({ behavior: "smooth" });
       }
+    });
+
+    loginBtn.addEventListener("click", async () => {
+      const email = adminEmail.value.trim();
+      const password = adminPassword.value;
+
+      if (!email || !password) {
+        showLoginStatus("Completează emailul și parola.", "error");
+        return;
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        showLoginStatus("Login reușit.", "success");
+        adminEmail.value = "";
+        adminPassword.value = "";
+      } catch (error) {
+        console.error(error);
+        showLoginStatus("Login eșuat. Verifică emailul și parola.", "error");
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      setAdminUI(!!user);
     });
 
     resetProductBtn.addEventListener("click", () => {
@@ -940,6 +1026,11 @@
     });
 
     saveBrandBtn.addEventListener("click", async () => {
+      if (!currentUser) {
+        showStatus("Trebuie să fii logat ca admin.", "error");
+        return;
+      }
+
       const name = brandNameInput.value.trim();
       const slug = normalizeSlug(brandSlugInput.value);
 
@@ -972,6 +1063,11 @@
     });
 
     saveProductBtn.addEventListener("click", async () => {
+      if (!currentUser) {
+        showStatus("Trebuie să fii logat ca admin.", "error");
+        return;
+      }
+
       const id = productId.value.trim();
       const name = productName.value.trim();
       const brand = productBrand.value;
