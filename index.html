@@ -56,7 +56,8 @@
     }
 
     .admin-toggle,
-    .logout-btn {
+    .logout-btn,
+    .back-btn {
       background: #caa33a;
       color: #000;
       border: none;
@@ -143,14 +144,16 @@
     .category-grid,
     .brand-grid,
     .products-grid,
-    .feature-grid {
+    .feature-grid,
+    .similar-grid {
       display: grid;
       gap: 18px;
     }
 
     .category-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
     .brand-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
-    .products-grid { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+    .products-grid,
+    .similar-grid { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
     .feature-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 
     .card,
@@ -158,7 +161,8 @@
     .product-card,
     .feature-card,
     .admin-box,
-    .login-box {
+    .login-box,
+    .product-detail-card {
       background: #0f0f0f;
       border: 1px solid rgba(202, 163, 58, 0.25);
       border-radius: 14px;
@@ -211,7 +215,8 @@
       border-color: #caa33a;
     }
 
-    .product-card img {
+    .product-card img,
+    .similar-card-image {
       width: 100%;
       height: 220px;
       object-fit: cover;
@@ -313,12 +318,14 @@
     }
 
     .login-section,
-    .admin-section {
+    .admin-section,
+    .product-page-section {
       display: none;
     }
 
     .login-section.show,
-    .admin-section.show {
+    .admin-section.show,
+    .product-page-section.show {
       display: block;
     }
 
@@ -406,6 +413,68 @@
       color: #ffb4b4;
     }
 
+    .product-detail-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .product-detail-image img {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(202, 163, 58, 0.25);
+      background: #111;
+      object-fit: cover;
+      max-height: 520px;
+    }
+
+    .product-detail-card {
+      padding: 22px;
+    }
+
+    .product-detail-brand {
+      color: #caa33a;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .product-detail-title {
+      font-size: 34px;
+      margin-bottom: 12px;
+    }
+
+    .product-detail-desc {
+      color: #d5d5d5;
+      font-size: 15px;
+      margin-bottom: 18px;
+    }
+
+    .product-detail-meta {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+      color: #d4d4d4;
+      font-size: 14px;
+    }
+
+    .back-wrap {
+      margin-bottom: 20px;
+    }
+
+    .similar-card {
+      background: #0f0f0f;
+      border: 1px solid rgba(202, 163, 58, 0.25);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .similar-card-body {
+      padding: 14px;
+    }
+
     footer {
       background: #0b0b0b;
       border-top: 1px solid rgba(202, 163, 58, 0.18);
@@ -424,6 +493,12 @@
       margin-bottom: 10px;
     }
 
+    @media (max-width: 900px) {
+      .product-detail-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 700px) {
       .navbar {
         flex-direction: column;
@@ -434,6 +509,10 @@
       .hero h1 { font-size: 32px; }
 
       .product-actions { flex-direction: column; }
+
+      .product-detail-title {
+        font-size: 28px;
+      }
     }
   </style>
 </head>
@@ -446,16 +525,16 @@
   <div class="navbar">
     <div class="logo">TOP LUXURY SHOP</div>
     <div class="nav-links">
-      <a href="#categorii">Categorii</a>
-      <a href="#branduri">Branduri</a>
-      <a href="#produse">Produse</a>
-      <a href="#contact">Contact</a>
+      <a href="#categorii" id="navCategories">Categorii</a>
+      <a href="#branduri" id="navBrands">Branduri</a>
+      <a href="#produse" id="navProducts">Produse</a>
+      <a href="#contact" id="navContact">Contact</a>
       <button class="admin-toggle" id="adminToggle">Admin</button>
       <button class="logout-btn" id="logoutBtn">Logout</button>
     </div>
   </div>
 
-  <section class="hero">
+  <section class="hero" id="heroSection">
     <div class="hero-content">
       <h1>Luxury Watches & Fashion Timepieces</h1>
       <p>Magazin premium conectat la Firebase. Poți adăuga, edita și șterge produse direct din site.</p>
@@ -559,6 +638,19 @@
         <h3 style="color:#caa33a; margin-bottom:12px;">Produse existente</h3>
         <div id="adminProductsList" class="feature-grid"></div>
       </div>
+    </div>
+  </section>
+
+  <section class="section product-page-section" id="productPageSection">
+    <div class="back-wrap">
+      <button class="back-btn" id="backToCatalogBtn">← Înapoi la catalog</button>
+    </div>
+
+    <div id="productDetailContainer"></div>
+
+    <div style="margin-top:32px;">
+      <h2 class="section-title" style="text-align:left;">Produse similare</h2>
+      <div class="similar-grid" id="similarProductsGrid"></div>
     </div>
   </section>
 
@@ -677,6 +769,15 @@
     const productsGrid = document.getElementById("productsGrid");
     const publicBrandsList = document.getElementById("publicBrandsList");
 
+    const heroSection = document.getElementById("heroSection");
+    const categoriesSection = document.getElementById("categorii");
+    const brandsSection = document.getElementById("branduri");
+    const productsSection = document.getElementById("produse");
+    const productPageSection = document.getElementById("productPageSection");
+    const productDetailContainer = document.getElementById("productDetailContainer");
+    const similarProductsGrid = document.getElementById("similarProductsGrid");
+    const backToCatalogBtn = document.getElementById("backToCatalogBtn");
+
     const adminToggle = document.getElementById("adminToggle");
     const logoutBtn = document.getElementById("logoutBtn");
 
@@ -711,6 +812,39 @@
     let activeBrand = "Toate";
     let currentUser = null;
     let isRealAdmin = false;
+
+    function getProductIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("product");
+    }
+
+    function openProductPage(productId) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("product", productId);
+      window.location.href = url.toString();
+    }
+
+    function goToCatalog() {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("product");
+      window.location.href = url.pathname + url.search;
+    }
+
+    function showCatalogSections() {
+      heroSection.style.display = "flex";
+      categoriesSection.style.display = "block";
+      brandsSection.style.display = "block";
+      productsSection.style.display = "block";
+      productPageSection.classList.remove("show");
+    }
+
+    function showProductSection() {
+      heroSection.style.display = "none";
+      categoriesSection.style.display = "none";
+      brandsSection.style.display = "none";
+      productsSection.style.display = "none";
+      productPageSection.classList.add("show");
+    }
 
     function formatPrice(value) {
       if (value === undefined || value === null || value === "") return "";
@@ -876,13 +1010,125 @@
                 </div>
                 <div class="product-actions">
                   <button class="buy-btn">Cumpără</button>
-                  <button class="details-btn">Detalii</button>
+                  <button class="details-btn" data-id="${product.id}">Detalii</button>
                 </div>
               </div>
             </div>
           `
         )
         .join("");
+
+      document.querySelectorAll(".details-btn[data-id]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          openProductPage(btn.dataset.id);
+        });
+      });
+    }
+
+    function renderProductDetail(product) {
+      productDetailContainer.innerHTML = `
+        <div class="product-detail-layout">
+          <div class="product-detail-image">
+            <img src="${product.image || "https://via.placeholder.com/1000x800?text=Luxury+Watch"}" alt="${product.name}">
+          </div>
+
+          <div class="product-detail-card">
+            <div class="product-detail-brand">${slugToLabel(product.brand)}</div>
+            <h1 class="product-detail-title">${product.name || ""}</h1>
+
+            <div class="price-row" style="margin-bottom:18px;">
+              ${product.oldPrice ? `<div class="old-price">${formatPrice(product.oldPrice)}</div>` : ""}
+              <div class="new-price">${formatPrice(product.price)}</div>
+            </div>
+
+            <p class="product-detail-desc">
+              ${product.description || "Descriere indisponibilă momentan."}
+            </p>
+
+            <div class="product-actions" style="margin-top:18px;">
+              <button class="buy-btn">Cumpără</button>
+              <button class="details-btn" id="backDetailsBtn">Înapoi</button>
+            </div>
+
+            <div class="product-detail-meta">
+              <div><strong>Brand:</strong> ${slugToLabel(product.brand)}</div>
+              <div><strong>Status:</strong> Disponibil</div>
+              <div><strong>Tip produs:</strong> Ceas premium</div>
+              <div><strong>Magazin:</strong> Top Luxury Shop</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const backDetailsBtn = document.getElementById("backDetailsBtn");
+      if (backDetailsBtn) {
+        backDetailsBtn.addEventListener("click", goToCatalog);
+      }
+    }
+
+    function renderSimilarProducts(product) {
+      const similar = allProducts
+        .filter((p) => p.id !== product.id && p.brand === product.brand)
+        .slice(0, 4);
+
+      if (!similar.length) {
+        similarProductsGrid.innerHTML = `
+          <div class="card" style="grid-column:1 / -1;">
+            <p>Nu există încă produse similare.</p>
+          </div>
+        `;
+        return;
+      }
+
+      similarProductsGrid.innerHTML = similar.map((item) => `
+        <div class="similar-card">
+          <img class="similar-card-image" src="${item.image || "https://via.placeholder.com/800x600?text=Luxury+Watch"}" alt="${item.name}">
+          <div class="similar-card-body">
+            <div class="product-brand">${slugToLabel(item.brand)}</div>
+            <div class="product-name">${item.name}</div>
+            <div class="price-row">
+              ${item.oldPrice ? `<div class="old-price">${formatPrice(item.oldPrice)}</div>` : ""}
+              <div class="new-price">${formatPrice(item.price)}</div>
+            </div>
+            <div class="product-actions">
+              <button class="details-btn similar-details-btn" data-id="${item.id}">Detalii</button>
+            </div>
+          </div>
+        </div>
+      `).join("");
+
+      document.querySelectorAll(".similar-details-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          openProductPage(btn.dataset.id);
+        });
+      });
+    }
+
+    function handleProductPageView() {
+      const productIdParam = getProductIdFromUrl();
+
+      if (!productIdParam) {
+        showCatalogSections();
+        return;
+      }
+
+      const product = allProducts.find((p) => p.id === productIdParam);
+
+      if (!product) {
+        showProductSection();
+        productDetailContainer.innerHTML = `
+          <div class="card">
+            <h3>Produsul nu a fost găsit</h3>
+            <p>Este posibil să fi fost șters sau dezactivat.</p>
+          </div>
+        `;
+        similarProductsGrid.innerHTML = "";
+        return;
+      }
+
+      showProductSection();
+      renderProductDetail(product);
+      renderSimilarProducts(product);
     }
 
     function renderAdminBrands() {
@@ -996,6 +1242,7 @@
         renderProducts();
         renderAdminBrands();
         renderAdminProducts();
+        handleProductPageView();
       } catch (error) {
         console.error(error);
         showStatus("Eroare la încărcarea datelor din Firebase.", "error");
@@ -1047,6 +1294,8 @@
       const adminOk = await checkIfAdmin(user);
       setAdminUI(!!user, adminOk);
     });
+
+    backToCatalogBtn.addEventListener("click", goToCatalog);
 
     resetProductBtn.addEventListener("click", () => {
       resetProductForm();
