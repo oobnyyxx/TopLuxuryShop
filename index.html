@@ -191,6 +191,31 @@
       font-size: 18px;
     }
 
+    .catalog-toolbar {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .toolbar-box {
+      background: #0f0f0f;
+      border: 1px solid rgba(202, 163, 58, 0.25);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .toolbar-box input,
+    .toolbar-box select {
+      width: 100%;
+      background: #0a0a0a;
+      color: #fff;
+      border: 1px solid rgba(202, 163, 58, 0.35);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+    }
+
     .filters {
       display: flex;
       gap: 10px;
@@ -494,7 +519,8 @@
     }
 
     @media (max-width: 900px) {
-      .product-detail-layout {
+      .product-detail-layout,
+      .catalog-toolbar {
         grid-template-columns: 1fr;
       }
     }
@@ -525,10 +551,10 @@
   <div class="navbar">
     <div class="logo">TOP LUXURY SHOP</div>
     <div class="nav-links">
-      <a href="#categorii" id="navCategories">Categorii</a>
-      <a href="#branduri" id="navBrands">Branduri</a>
-      <a href="#produse" id="navProducts">Produse</a>
-      <a href="#contact" id="navContact">Contact</a>
+      <a href="#categorii">Categorii</a>
+      <a href="#branduri">Branduri</a>
+      <a href="#produse">Produse</a>
+      <a href="#contact">Contact</a>
       <button class="admin-toggle" id="adminToggle">Admin</button>
       <button class="logout-btn" id="logoutBtn">Logout</button>
     </div>
@@ -686,6 +712,22 @@
   <section class="section" id="produse">
     <h2 class="section-title">Catalog produse</h2>
     <p class="section-subtitle">Produsele vin direct din Firebase.</p>
+
+    <div class="catalog-toolbar">
+      <div class="toolbar-box">
+        <input id="searchInput" type="text" placeholder="Caută după nume, brand sau descriere">
+      </div>
+      <div class="toolbar-box">
+        <select id="sortSelect">
+          <option value="default">Sortează produsele</option>
+          <option value="price-asc">Preț crescător</option>
+          <option value="price-desc">Preț descrescător</option>
+          <option value="name-asc">Nume A-Z</option>
+          <option value="name-desc">Nume Z-A</option>
+        </select>
+      </div>
+    </div>
+
     <div class="filters" id="filters"></div>
     <div class="products-grid" id="productsGrid"></div>
   </section>
@@ -768,6 +810,8 @@
     const filtersEl = document.getElementById("filters");
     const productsGrid = document.getElementById("productsGrid");
     const publicBrandsList = document.getElementById("publicBrandsList");
+    const searchInput = document.getElementById("searchInput");
+    const sortSelect = document.getElementById("sortSelect");
 
     const heroSection = document.getElementById("heroSection");
     const categoriesSection = document.getElementById("categorii");
@@ -812,6 +856,8 @@
     let activeBrand = "Toate";
     let currentUser = null;
     let isRealAdmin = false;
+    let searchTerm = "";
+    let sortMode = "default";
 
     function getProductIdFromUrl() {
       const params = new URLSearchParams(window.location.search);
@@ -979,17 +1025,47 @@
       });
     }
 
-    function renderProducts() {
-      const filtered =
+    function getVisibleProducts() {
+      let filtered =
         activeBrand === "Toate"
-          ? allProducts
+          ? [...allProducts]
           : allProducts.filter((p) => slugToLabel(p.brand) === activeBrand);
+
+      if (searchTerm.trim()) {
+        const q = searchTerm.trim().toLowerCase();
+        filtered = filtered.filter((p) => {
+          const brandName = slugToLabel(p.brand).toLowerCase();
+          const name = (p.name || "").toLowerCase();
+          const desc = (p.description || "").toLowerCase();
+          return (
+            name.includes(q) ||
+            brandName.includes(q) ||
+            desc.includes(q)
+          );
+        });
+      }
+
+      if (sortMode === "price-asc") {
+        filtered.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
+      } else if (sortMode === "price-desc") {
+        filtered.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
+      } else if (sortMode === "name-asc") {
+        filtered.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+      } else if (sortMode === "name-desc") {
+        filtered.sort((a, b) => (b.name || "").localeCompare(a.name || ""));
+      }
+
+      return filtered;
+    }
+
+    function renderProducts() {
+      const filtered = getVisibleProducts();
 
       if (!filtered.length) {
         productsGrid.innerHTML = `
           <div class="card" style="grid-column: 1 / -1;">
             <h3>Nu există produse</h3>
-            <p>Adaugă produse din admin și vor apărea aici automat.</p>
+            <p>Încearcă altă căutare sau alt filtru.</p>
           </div>
         `;
         return;
@@ -1389,6 +1465,16 @@
         console.error(error);
         showStatus("Eroare la salvarea produsului.", "error");
       }
+    });
+
+    searchInput.addEventListener("input", (e) => {
+      searchTerm = e.target.value || "";
+      renderProducts();
+    });
+
+    sortSelect.addEventListener("change", (e) => {
+      sortMode = e.target.value || "default";
+      renderProducts();
     });
 
     loadAll();
