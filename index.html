@@ -648,7 +648,8 @@
       addDoc,
       deleteDoc,
       doc,
-      updateDoc
+      updateDoc,
+      getDoc
     } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
     import {
@@ -709,6 +710,7 @@
     let allBrands = [];
     let activeBrand = "Toate";
     let currentUser = null;
+    let isRealAdmin = false;
 
     function formatPrice(value) {
       if (value === undefined || value === null || value === "") return "";
@@ -738,17 +740,40 @@
       if (type === "error") loginStatus.classList.add("status-error");
     }
 
-    function setAdminUI(isLoggedIn) {
-      if (isLoggedIn) {
+    function setAdminUI(isLoggedIn, isAdmin) {
+      if (isLoggedIn && isAdmin) {
         adminSection.classList.add("show");
         loginSection.classList.remove("show");
         logoutBtn.style.display = "inline-block";
         adminToggle.textContent = "Admin activ";
+      } else if (isLoggedIn && !isAdmin) {
+        adminSection.classList.remove("show");
+        loginSection.classList.remove("show");
+        logoutBtn.style.display = "inline-block";
+        adminToggle.textContent = "Fără acces admin";
       } else {
         adminSection.classList.remove("show");
         loginSection.classList.remove("show");
         logoutBtn.style.display = "none";
         adminToggle.textContent = "Admin";
+      }
+    }
+
+    async function checkIfAdmin(user) {
+      if (!user || !user.email) {
+        isRealAdmin = false;
+        return false;
+      }
+
+      try {
+        const adminRef = doc(db, "admins", user.email);
+        const adminSnap = await getDoc(adminRef);
+        isRealAdmin = adminSnap.exists();
+        return isRealAdmin;
+      } catch (error) {
+        console.error(error);
+        isRealAdmin = false;
+        return false;
       }
     }
 
@@ -880,7 +905,7 @@
 
       document.querySelectorAll(".delete-brand-btn").forEach((btn) => {
         btn.addEventListener("click", async () => {
-          if (!currentUser) {
+          if (!currentUser || !isRealAdmin) {
             showStatus("Trebuie să fii logat ca admin.", "error");
             return;
           }
@@ -921,7 +946,7 @@
 
       document.querySelectorAll(".edit-product-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
-          if (!currentUser) {
+          if (!currentUser || !isRealAdmin) {
             showStatus("Trebuie să fii logat ca admin.", "error");
             return;
           }
@@ -932,7 +957,7 @@
 
       document.querySelectorAll(".delete-product-btn").forEach((btn) => {
         btn.addEventListener("click", async () => {
-          if (!currentUser) {
+          if (!currentUser || !isRealAdmin) {
             showStatus("Trebuie să fii logat ca admin.", "error");
             return;
           }
@@ -978,9 +1003,11 @@
     }
 
     adminToggle.addEventListener("click", () => {
-      if (currentUser) {
+      if (currentUser && isRealAdmin) {
         adminSection.classList.toggle("show");
         adminSection.scrollIntoView({ behavior: "smooth" });
+      } else if (currentUser && !isRealAdmin) {
+        alert("Acest cont nu are acces admin.");
       } else {
         loginSection.classList.toggle("show");
         loginSection.scrollIntoView({ behavior: "smooth" });
@@ -1015,9 +1042,10 @@
       }
     });
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       currentUser = user;
-      setAdminUI(!!user);
+      const adminOk = await checkIfAdmin(user);
+      setAdminUI(!!user, adminOk);
     });
 
     resetProductBtn.addEventListener("click", () => {
@@ -1026,7 +1054,7 @@
     });
 
     saveBrandBtn.addEventListener("click", async () => {
-      if (!currentUser) {
+      if (!currentUser || !isRealAdmin) {
         showStatus("Trebuie să fii logat ca admin.", "error");
         return;
       }
@@ -1063,7 +1091,7 @@
     });
 
     saveProductBtn.addEventListener("click", async () => {
-      if (!currentUser) {
+      if (!currentUser || !isRealAdmin) {
         showStatus("Trebuie să fii logat ca admin.", "error");
         return;
       }
