@@ -1,1 +1,892 @@
-<h1>Admin page</h1>
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Top Luxury Shop</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #060606;
+      color: #fff;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .topbar {
+      background: #111;
+      color: #caa33a;
+      padding: 10px 16px;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid rgba(202, 163, 58, 0.2);
+    }
+
+    .navbar {
+      background: #0b0b0b;
+      border-bottom: 1px solid rgba(202, 163, 58, 0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      color: #caa33a;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .admin-badge {
+      color: #caa33a;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .btn-gold, .btn-dark {
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-gold {
+      background: #caa33a;
+      color: #000;
+    }
+
+    .btn-dark {
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(202, 163, 58, 0.45);
+    }
+
+    .section {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 16px;
+    }
+
+    .page-title {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+
+    .page-subtitle {
+      color: #cfcfcf;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .login-section,
+    .admin-section,
+    .no-access-section {
+      display: none;
+    }
+
+    .login-section.show,
+    .admin-section.show,
+    .no-access-section.show {
+      display: block;
+    }
+
+    .panel-box,
+    .login-box,
+    .card-box {
+      background: #0f0f0f;
+      border: 1px solid rgba(202, 163, 58, 0.25);
+      border-radius: 14px;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    .login-box {
+      max-width: 700px;
+      margin: 30px auto 0;
+    }
+
+    .box-title {
+      color: #caa33a;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .box-text {
+      color: #cfcfcf;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+
+    .field-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field-wrap label {
+      font-size: 13px;
+      color: #d9d9d9;
+    }
+
+    .field-wrap input,
+    .field-wrap select,
+    .field-wrap textarea {
+      width: 100%;
+      background: #0a0a0a;
+      color: #fff;
+      border: 1px solid rgba(202, 163, 58, 0.35);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+    }
+
+    .field-wrap textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .checkbox-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #0a0a0a;
+      color: #fff;
+      border: 1px solid rgba(202, 163, 58, 0.35);
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 48px;
+    }
+
+    .checkbox-wrap input {
+      width: auto;
+      margin: 0;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .status-box {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .status-success {
+      display: block;
+      background: rgba(20, 110, 40, 0.2);
+      border: 1px solid rgba(70, 200, 100, 0.4);
+      color: #9cf0ae;
+    }
+
+    .status-error {
+      display: block;
+      background: rgba(120, 20, 20, 0.2);
+      border: 1px solid rgba(220, 90, 90, 0.4);
+      color: #ffb4b4;
+    }
+
+    .list-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .item-card {
+      background: #0f0f0f;
+      border: 1px solid rgba(202, 163, 58, 0.25);
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .item-card h4 {
+      color: #caa33a;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .item-card p {
+      color: #d2d2d2;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .section-space {
+      margin-top: 26px;
+    }
+
+    .helper-note {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #bdbdbd;
+    }
+
+    @media (max-width: 700px) {
+      .page-title {
+        font-size: 28px;
+      }
+
+      .navbar {
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div>Panou administrare • Firebase • Produse și branduri</div>
+    <div><a href="/">← Înapoi la site</a></div>
+  </div>
+
+  <div class="navbar">
+    <div class="logo">TOP LUXURY SHOP</div>
+    <div class="nav-right">
+      <div class="admin-badge">Panou Admin</div>
+      <button class="btn-dark" id="logoutBtn" style="display:none;">Logout</button>
+    </div>
+  </div>
+
+  <section class="section">
+    <h1 class="page-title">Administrare magazin</h1>
+    <p class="page-subtitle">Aici te loghezi și gestionezi produsele și brandurile. Tot ce modifici aici apare automat pe site-ul public.</p>
+
+    <div class="login-section show" id="loginSection">
+      <div class="login-box">
+        <h2 class="box-title">Login admin</h2>
+        <p class="box-text">Folosește emailul și parola create în Firebase Authentication.</p>
+
+        <div class="grid-2">
+          <div class="field-wrap">
+            <label for="adminEmail">Email admin</label>
+            <input id="adminEmail" type="email" placeholder="admin@email.com">
+          </div>
+
+          <div class="field-wrap">
+            <label for="adminPassword">Parolă</label>
+            <input id="adminPassword" type="password" placeholder="parola">
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-gold" id="loginBtn">Login</button>
+        </div>
+
+        <div id="loginStatus" class="status-box"></div>
+      </div>
+    </div>
+
+    <div class="no-access-section" id="noAccessSection">
+      <div class="panel-box">
+        <h2 class="box-title">Acces refuzat</h2>
+        <p class="box-text">Ești logat, dar acest cont nu există în colecția <strong>admins</strong> din Firestore.</p>
+      </div>
+    </div>
+
+    <div class="admin-section" id="adminSection">
+      <div class="panel-box">
+        <h2 class="box-title">Produse</h2>
+        <p class="box-text">Adaugi sau editezi produse fără să mai modifici codul site-ului.</p>
+
+        <input id="productId" type="hidden">
+
+        <div class="grid-3">
+          <div class="field-wrap">
+            <label for="productName">Nume produs</label>
+            <input id="productName" type="text" placeholder="Ex: Rolex Submariner">
+          </div>
+
+          <div class="field-wrap">
+            <label for="productBrand">Brand</label>
+            <select id="productBrand"></select>
+          </div>
+
+          <div class="field-wrap">
+            <label for="productPrice">Preț</label>
+            <input id="productPrice" type="number" placeholder="Ex: 8000">
+          </div>
+
+          <div class="field-wrap">
+            <label for="productOldPrice">Preț vechi</label>
+            <input id="productOldPrice" type="number" placeholder="Ex: 8900">
+          </div>
+
+          <div class="field-wrap">
+            <label for="productStock">Stoc</label>
+            <input id="productStock" type="number" placeholder="Ex: 5">
+          </div>
+
+          <div class="field-wrap">
+            <label for="productSku">SKU / Cod produs</label>
+            <input id="productSku" type="text" placeholder="Ex: RLX-SUB-001">
+          </div>
+
+          <div class="field-wrap">
+            <label for="productBadge">Badge</label>
+            <select id="productBadge">
+              <option value="">Nimic</option>
+              <option value="Nou">Nou</option>
+              <option value="Reducere">Reducere</option>
+              <option value="Bestseller">Bestseller</option>
+            </select>
+          </div>
+
+          <div class="field-wrap">
+            <label>Opțiuni produs</label>
+            <div class="checkbox-wrap">
+              <input id="productActive" type="checkbox" checked>
+              <label for="productActive">Produs activ</label>
+            </div>
+          </div>
+
+          <div class="field-wrap">
+            <label>&nbsp;</label>
+            <div class="checkbox-wrap">
+              <input id="productFeatured" type="checkbox">
+              <label for="productFeatured">Produs recomandat</label>
+            </div>
+          </div>
+
+          <div class="field-wrap" style="grid-column: 1 / -1;">
+            <label for="productImage">Link imagine</label>
+            <input id="productImage" type="text" placeholder="Lipește linkul imaginii">
+          </div>
+
+          <div class="field-wrap" style="grid-column: 1 / -1;">
+            <label for="productDescription">Descriere</label>
+            <textarea id="productDescription" placeholder="Scrie descrierea produsului"></textarea>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-gold" id="saveProductBtn">Salvează produs</button>
+          <button class="btn-dark" id="resetProductBtn" type="button">Reset formular</button>
+        </div>
+
+        <div id="adminStatus" class="status-box"></div>
+      </div>
+
+      <div class="panel-box section-space">
+        <h2 class="box-title">Branduri</h2>
+        <p class="box-text">Adaugi branduri noi care apar apoi în site și în formularul produsului.</p>
+
+        <div class="grid-2">
+          <div class="field-wrap">
+            <label for="brandNameInput">Nume brand</label>
+            <input id="brandNameInput" type="text" placeholder="Ex: Cartier">
+          </div>
+
+          <div class="field-wrap">
+            <label for="brandSlugInput">Slug brand</label>
+            <input id="brandSlugInput" type="text" placeholder="Ex: cartier">
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-gold" id="saveBrandBtn" type="button">Adaugă brand</button>
+        </div>
+
+        <p class="helper-note">Slug-ul trebuie să fie simplu, cu litere mici. Exemplu: rolex, omega, patek-philippe</p>
+      </div>
+
+      <div class="section-space">
+        <h2 class="box-title">Branduri existente</h2>
+        <div id="adminBrandsList" class="list-grid"></div>
+      </div>
+
+      <div class="section-space">
+        <h2 class="box-title">Produse existente</h2>
+        <div id="adminProductsList" class="list-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      addDoc,
+      deleteDoc,
+      doc,
+      updateDoc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+
+    const firebaseConfig = {
+  apiKey: "AIzaSyDhoR_hh96P7qqDCYv1rcw3KN5oTkivlX8",
+  authDomain: "topluxuryshop.firebaseapp.com",
+  projectId: "topluxuryshop",
+  storageBucket: "topluxuryshop.firebasestorage.app",
+  messagingSenderId: "163597143700",
+  appId: "1:163597143700:web:cfe4719a22927b31202e81",
+  measurementId: "G-YR04PSBQBN"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const loginSection = document.getElementById("loginSection");
+    const adminSection = document.getElementById("adminSection");
+    const noAccessSection = document.getElementById("noAccessSection");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const loginBtn = document.getElementById("loginBtn");
+    const loginStatus = document.getElementById("loginStatus");
+    const adminEmail = document.getElementById("adminEmail");
+    const adminPassword = document.getElementById("adminPassword");
+
+    const adminStatus = document.getElementById("adminStatus");
+    const saveProductBtn = document.getElementById("saveProductBtn");
+    const saveBrandBtn = document.getElementById("saveBrandBtn");
+    const resetProductBtn = document.getElementById("resetProductBtn");
+
+    const productId = document.getElementById("productId");
+    const productName = document.getElementById("productName");
+    const productBrand = document.getElementById("productBrand");
+    const productPrice = document.getElementById("productPrice");
+    const productOldPrice = document.getElementById("productOldPrice");
+    const productStock = document.getElementById("productStock");
+    const productSku = document.getElementById("productSku");
+    const productBadge = document.getElementById("productBadge");
+    const productActive = document.getElementById("productActive");
+    const productFeatured = document.getElementById("productFeatured");
+    const productImage = document.getElementById("productImage");
+    const productDescription = document.getElementById("productDescription");
+
+    const brandNameInput = document.getElementById("brandNameInput");
+    const brandSlugInput = document.getElementById("brandSlugInput");
+
+    const adminBrandsList = document.getElementById("adminBrandsList");
+    const adminProductsList = document.getElementById("adminProductsList");
+
+    let allProducts = [];
+    let allBrands = [];
+    let currentUser = null;
+    let isRealAdmin = false;
+
+    function showAdminStatus(message, type) {
+      adminStatus.className = "status-box";
+      adminStatus.textContent = message;
+      if (type === "success") adminStatus.classList.add("status-success");
+      if (type === "error") adminStatus.classList.add("status-error");
+    }
+
+    function showLoginStatus(message, type) {
+      loginStatus.className = "status-box";
+      loginStatus.textContent = message;
+      if (type === "success") loginStatus.classList.add("status-success");
+      if (type === "error") loginStatus.classList.add("status-error");
+    }
+
+    function formatPrice(value) {
+      if (value === undefined || value === null || value === "") return "";
+      return `€${value}`;
+    }
+
+    function slugToLabel(slug) {
+      const found = allBrands.find((b) => b.slug === slug);
+      return found ? found.name : slug || "";
+    }
+
+    function normalizeSlug(text) {
+      return (text || "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "-");
+    }
+
+    function setPageState(mode) {
+      loginSection.classList.remove("show");
+      adminSection.classList.remove("show");
+      noAccessSection.classList.remove("show");
+
+      if (mode === "login") {
+        loginSection.classList.add("show");
+        logoutBtn.style.display = "none";
+      } else if (mode === "admin") {
+        adminSection.classList.add("show");
+        logoutBtn.style.display = "inline-block";
+      } else if (mode === "no-access") {
+        noAccessSection.classList.add("show");
+        logoutBtn.style.display = "inline-block";
+      }
+    }
+
+    async function checkIfAdmin(user) {
+      if (!user || !user.email) {
+        isRealAdmin = false;
+        return false;
+      }
+
+      try {
+        const adminRef = doc(db, "admins", user.email);
+        const adminSnap = await getDoc(adminRef);
+        isRealAdmin = adminSnap.exists();
+        return isRealAdmin;
+      } catch (error) {
+        console.error(error);
+        isRealAdmin = false;
+        return false;
+      }
+    }
+
+    function resetProductForm() {
+      productId.value = "";
+      productName.value = "";
+      productPrice.value = "";
+      productOldPrice.value = "";
+      productStock.value = "";
+      productSku.value = "";
+      productBadge.value = "";
+      productActive.checked = true;
+      productFeatured.checked = false;
+      productImage.value = "";
+      productDescription.value = "";
+      if (productBrand.options.length > 0) {
+        productBrand.selectedIndex = 0;
+      }
+      saveProductBtn.textContent = "Salvează produs";
+    }
+
+    function fillProductForm(product) {
+      productId.value = product.id || "";
+      productName.value = product.name || "";
+      productBrand.value = product.brand || "";
+      productPrice.value = product.price ?? "";
+      productOldPrice.value = product.oldPrice ?? "";
+      productStock.value = product.stock ?? "";
+      productSku.value = product.sku || "";
+      productBadge.value = product.badge || "";
+      productActive.checked = product.active === true;
+      productFeatured.checked = product.featured === true;
+      productImage.value = product.image || "";
+      productDescription.value = product.description || "";
+      saveProductBtn.textContent = "Actualizează produs";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderBrandOptions() {
+      const brands = allBrands.filter((b) => b.active === true);
+
+      if (!brands.length) {
+        productBrand.innerHTML = `<option value="">Nu există branduri</option>`;
+        return;
+      }
+
+      productBrand.innerHTML = brands
+        .map((brand) => `<option value="${brand.slug}">${brand.name}</option>`)
+        .join("");
+    }
+
+    function renderAdminBrands() {
+      if (!allBrands.length) {
+        adminBrandsList.innerHTML = `<div class="item-card"><p>Nu există branduri.</p></div>`;
+        return;
+      }
+
+      adminBrandsList.innerHTML = allBrands.map((brand) => `
+        <div class="item-card">
+          <h4>${brand.name}</h4>
+          <p>Slug: ${brand.slug}</p>
+          <p>Activ: ${brand.active ? "Da" : "Nu"}</p>
+          <div class="item-actions">
+            <button class="btn-dark delete-brand-btn" data-id="${brand.id}">Șterge brand</button>
+          </div>
+        </div>
+      `).join("");
+
+      document.querySelectorAll(".delete-brand-btn").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          if (!currentUser || !isRealAdmin) {
+            showAdminStatus("Trebuie să fii logat ca admin.", "error");
+            return;
+          }
+
+          if (!confirm("Sigur vrei să ștergi acest brand?")) return;
+
+          try {
+            await deleteDoc(doc(db, "brands", btn.dataset.id));
+            showAdminStatus("Brand șters cu succes.", "success");
+            await loadAllAdminData();
+          } catch (error) {
+            console.error(error);
+            showAdminStatus("Eroare la ștergerea brandului.", "error");
+          }
+        });
+      });
+    }
+
+    function renderAdminProducts() {
+      if (!allProducts.length) {
+        adminProductsList.innerHTML = `<div class="item-card"><p>Nu există produse.</p></div>`;
+        return;
+      }
+
+      adminProductsList.innerHTML = allProducts.map((product) => `
+        <div class="item-card">
+          <h4>${product.name || "-"}</h4>
+          <p>Brand: ${slugToLabel(product.brand)}</p>
+          <p>Preț: ${formatPrice(product.price)}</p>
+          <p>Stoc: ${product.stock ?? 0}</p>
+          <p>SKU: ${product.sku || "-"}</p>
+          <p>Badge: ${product.badge || "-"}</p>
+          <p>Activ: ${product.active ? "Da" : "Nu"}</p>
+          <p>Recomandat: ${product.featured ? "Da" : "Nu"}</p>
+          <div class="item-actions">
+            <button class="btn-dark edit-product-btn" data-id="${product.id}">Editează</button>
+            <button class="btn-dark delete-product-btn" data-id="${product.id}">Șterge</button>
+          </div>
+        </div>
+      `).join("");
+
+      document.querySelectorAll(".edit-product-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const product = allProducts.find((p) => p.id === btn.dataset.id);
+          if (product) fillProductForm(product);
+        });
+      });
+
+      document.querySelectorAll(".delete-product-btn").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          if (!currentUser || !isRealAdmin) {
+            showAdminStatus("Trebuie să fii logat ca admin.", "error");
+            return;
+          }
+
+          if (!confirm("Sigur vrei să ștergi acest produs?")) return;
+
+          try {
+            await deleteDoc(doc(db, "products", btn.dataset.id));
+            showAdminStatus("Produs șters cu succes.", "success");
+            await loadAllAdminData();
+          } catch (error) {
+            console.error(error);
+            showAdminStatus("Eroare la ștergerea produsului.", "error");
+          }
+        });
+      });
+    }
+
+    async function loadBrands() {
+      const snapshot = await getDocs(collection(db, "brands"));
+      allBrands = snapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
+    }
+
+    async function loadProducts() {
+      const snapshot = await getDocs(collection(db, "products"));
+      allProducts = snapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
+    }
+
+    async function loadAllAdminData() {
+      try {
+        await loadBrands();
+        await loadProducts();
+        renderBrandOptions();
+        renderAdminBrands();
+        renderAdminProducts();
+      } catch (error) {
+        console.error(error);
+        showAdminStatus("Eroare la încărcarea datelor din Firebase.", "error");
+      }
+    }
+
+    loginBtn.addEventListener("click", async () => {
+      const email = adminEmail.value.trim();
+      const password = adminPassword.value;
+
+      if (!email || !password) {
+        showLoginStatus("Completează emailul și parola.", "error");
+        return;
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        showLoginStatus("Login reușit.", "success");
+        adminEmail.value = "";
+        adminPassword.value = "";
+      } catch (error) {
+        console.error(error);
+        showLoginStatus("Login eșuat. Verifică emailul și parola.", "error");
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    resetProductBtn.addEventListener("click", () => {
+      resetProductForm();
+      showAdminStatus("Formular resetat.", "success");
+    });
+
+    saveBrandBtn.addEventListener("click", async () => {
+      if (!currentUser || !isRealAdmin) {
+        showAdminStatus("Trebuie să fii logat ca admin.", "error");
+        return;
+      }
+
+      const name = brandNameInput.value.trim();
+      const slug = normalizeSlug(brandSlugInput.value);
+
+      if (!name || !slug) {
+        showAdminStatus("Completează numele și slug-ul brandului.", "error");
+        return;
+      }
+
+      const alreadyExists = allBrands.some((b) => b.slug === slug);
+      if (alreadyExists) {
+        showAdminStatus("Există deja un brand cu acest slug.", "error");
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, "brands"), {
+          name,
+          slug,
+          active: true
+        });
+
+        brandNameInput.value = "";
+        brandSlugInput.value = "";
+        showAdminStatus("Brand adăugat cu succes.", "success");
+        await loadAllAdminData();
+      } catch (error) {
+        console.error(error);
+        showAdminStatus("Eroare la salvarea brandului.", "error");
+      }
+    });
+
+    saveProductBtn.addEventListener("click", async () => {
+      if (!currentUser || !isRealAdmin) {
+        showAdminStatus("Trebuie să fii logat ca admin.", "error");
+        return;
+      }
+
+      const id = productId.value.trim();
+      const name = productName.value.trim();
+      const brand = productBrand.value;
+      const price = Number(productPrice.value);
+      const oldPrice = productOldPrice.value ? Number(productOldPrice.value) : null;
+      const stock = productStock.value ? Number(productStock.value) : 0;
+      const sku = productSku.value.trim();
+      const badge = productBadge.value;
+      const active = productActive.checked;
+      const featured = productFeatured.checked;
+      const image = productImage.value.trim();
+      const description = productDescription.value.trim();
+
+      if (!name || !brand || !price || !image || !description) {
+        showAdminStatus("Completează toate câmpurile obligatorii.", "error");
+        return;
+      }
+
+      const payload = {
+        name,
+        brand,
+        price,
+        oldPrice,
+        stock,
+        sku,
+        badge,
+        active,
+        featured,
+        image,
+        description
+      };
+
+      try {
+        if (id) {
+          await updateDoc(doc(db, "products", id), payload);
+          showAdminStatus("Produs actualizat cu succes.", "success");
+        } else {
+          await addDoc(collection(db, "products"), payload);
+          showAdminStatus("Produs adăugat cu succes.", "success");
+        }
+
+        resetProductForm();
+        await loadAllAdminData();
+      } catch (error) {
+        console.error(error);
+        showAdminStatus("Eroare la salvarea produsului.", "error");
+      }
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+
+      if (!user) {
+        isRealAdmin = false;
+        setPageState("login");
+        return;
+      }
+
+      const adminOk = await checkIfAdmin(user);
+
+      if (adminOk) {
+        setPageState("admin");
+        await loadAllAdminData();
+      } else {
+        setPageState("no-access");
+      }
+    });
+  </script>
+</body>
+</html> 
