@@ -125,26 +125,22 @@
       margin-bottom: 24px;
     }
 
-    .category-grid,
-    .brand-grid,
     .products-grid,
-    .feature-grid,
     .similar-grid {
       display: grid;
       gap: 18px;
     }
 
-    .category-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-    .brand-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
     .products-grid,
-    .similar-grid { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
-    .feature-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .similar-grid {
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    }
 
-    .card,
-    .brand-card,
     .product-card,
-    .feature-card,
-    .product-detail-card {
+    .product-detail-card,
+    .contact-box,
+    .similar-card,
+    .card {
       background: #0f0f0f;
       border: 1px solid rgba(202, 163, 58, 0.25);
       border-radius: 14px;
@@ -164,13 +160,6 @@
     .card p {
       color: #d3d3d3;
       font-size: 14px;
-    }
-
-    .brand-card {
-      padding: 20px 14px;
-      text-align: center;
-      font-weight: 700;
-      font-size: 18px;
     }
 
     .catalog-toolbar {
@@ -318,25 +307,7 @@
       border: 1px solid rgba(202, 163, 58, 0.45);
     }
 
-    .feature-card {
-      padding: 18px;
-      text-align: center;
-    }
-
-    .feature-card h4 {
-      color: #caa33a;
-      margin-bottom: 8px;
-    }
-
-    .feature-card p {
-      color: #d0d0d0;
-      font-size: 14px;
-    }
-
     .contact-box {
-      background: #0f0f0f;
-      border: 1px solid rgba(202, 163, 58, 0.25);
-      border-radius: 14px;
       padding: 24px;
       text-align: center;
     }
@@ -411,13 +382,6 @@
       cursor: pointer;
     }
 
-    .similar-card {
-      background: #0f0f0f;
-      border: 1px solid rgba(202, 163, 58, 0.25);
-      border-radius: 14px;
-      overflow: hidden;
-    }
-
     .similar-card-body {
       padding: 14px;
     }
@@ -471,8 +435,6 @@
   <div class="navbar">
     <div class="logo">TOP LUXURY SHOP</div>
     <div class="nav-links">
-      <a href="#categorii">Categorii</a>
-      <a href="#branduri">Branduri</a>
       <a href="#produse">Produse</a>
       <a href="#contact">Contact</a>
     </div>
@@ -481,10 +443,11 @@
   <section class="hero" id="heroSection">
     <div class="hero-content">
       <h1>Luxury Watches & Fashion Timepieces</h1>
-      <p>Magazin premium cu produse administrate din panoul de admin și afișate automat pentru clienți.</p>
+      <p>Descoperă colecția noastră premium de ceasuri.</p>
       <div class="hero-buttons">
-        <button class="btn-gold" onclick="document.getElementById('produse').scrollIntoView({behavior:'smooth'})">Vezi produsele</button>
-        <button class="btn-dark" onclick="document.getElementById('branduri').scrollIntoView({behavior:'smooth'})">Vezi brandurile</button>
+        <button class="btn-gold" onclick="document.getElementById('produse').scrollIntoView({behavior:'smooth'})">
+          Vezi produsele
+        </button>
       </div>
     </div>
   </section>
@@ -502,44 +465,15 @@
     </div>
   </section>
 
-  <section class="section" id="categorii">
-    <h2 class="section-title">Categorii populare</h2>
-    <p class="section-subtitle">Structură premium pentru magazinul tău de ceasuri.</p>
-    <div class="category-grid">
-      <div class="card">
-        <h3>Ceasuri bărbați</h3>
-        <p>Modele elegante, sport și premium pentru colecții moderne.</p>
-      </div>
-      <div class="card">
-        <h3>Ceasuri femei</h3>
-        <p>Design rafinat, fashion și luxury pentru orice stil.</p>
-      </div>
-      <div class="card">
-        <h3>Top Seller</h3>
-        <p>Produsele cele mai vizibile și cel mai ușor de promovat.</p>
-      </div>
-      <div class="card">
-        <h3>Cadouri premium</h3>
-        <p>Modele potrivite pentru aniversări, sărbători și ocazii speciale.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="branduri">
-    <h2 class="section-title">Branduri</h2>
-    <p class="section-subtitle">Brandurile active sunt încărcate automat din Firebase.</p>
-    <div class="brand-grid" id="publicBrandsList"></div>
-  </section>
-
   <section class="section" id="featuredSection">
     <h2 class="section-title">Produse recomandate</h2>
-    <p class="section-subtitle">Produsele marcate ca recomandate apar aici automat.</p>
+    <p class="section-subtitle">Selecția noastră specială pentru clienți.</p>
     <div class="products-grid" id="featuredProductsGrid"></div>
   </section>
 
   <section class="section" id="produse">
     <h2 class="section-title">Catalog produse</h2>
-    <p class="section-subtitle">Produsele active vin direct din Firebase.</p>
+    <p class="section-subtitle">Descoperă colecția noastră de ceasuri premium.</p>
 
     <div class="catalog-toolbar">
       <div class="toolbar-box">
@@ -560,32 +494,10 @@
     <div class="products-grid" id="productsGrid"></div>
   </section>
 
-  <section class="section">
-    <h2 class="section-title">Avantajele magazinului</h2>
-    <div class="feature-grid">
-      <div class="feature-card">
-        <h4>Design premium</h4>
-        <p>Aspect elegant, luxury, optimizat pentru telefon.</p>
-      </div>
-      <div class="feature-card">
-        <h4>Catalog automat</h4>
-        <p>Produsele se actualizează automat când sunt modificate în admin.</p>
-      </div>
-      <div class="feature-card">
-        <h4>Pregătit pentru comenzi</h4>
-        <p>Poți adăuga ulterior WhatsApp și checkout cu plată online.</p>
-      </div>
-      <div class="feature-card">
-        <h4>Scalabil</h4>
-        <p>Poți adăuga produse și branduri fără să refaci site-ul.</p>
-      </div>
-    </div>
-  </section>
-
   <section class="section" id="contact">
     <div class="contact-box">
       <h2 class="section-title" style="margin-bottom: 12px;">Contact & Comenzi</h2>
-      <p style="color:#d4d4d4; margin-bottom:16px;">Pasul următor: conectăm butonul „Cumpără” la WhatsApp și apoi la checkout.</p>
+      <p style="color:#d4d4d4; margin-bottom:16px;">Pentru comenzi și detalii, contactează-ne direct.</p>
       <button class="btn-gold">Contactează-ne</button>
     </div>
   </section>
@@ -609,30 +521,27 @@
       getDocs
     } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-  apiKey: "AIzaSyDhoR_hh96P7qqDCYv1rcw3KN5oTkivlX8",
-  authDomain: "topluxuryshop.firebaseapp.com",
-  projectId: "topluxuryshop",
-  storageBucket: "topluxuryshop.firebasestorage.app",
-  messagingSenderId: "163597143700",
-  appId: "1:163597143700:web:cfe4719a22927b31202e81",
-  measurementId: "G-YR04PSBQBN"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhoR_hh96P7qqDCYv1rcw3KN5oTkivlX8",
+      authDomain: "topluxuryshop.firebaseapp.com",
+      projectId: "topluxuryshop",
+      storageBucket: "topluxuryshop.firebasestorage.app",
+      messagingSenderId: "163597143700",
+      appId: "1:163597143700:web:cfe4719a22927b31202e81",
+      measurementId: "G-YR04PSBQBN"
+    };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
     const filtersEl = document.getElementById("filters");
     const productsGrid = document.getElementById("productsGrid");
-    const publicBrandsList = document.getElementById("publicBrandsList");
     const featuredProductsGrid = document.getElementById("featuredProductsGrid");
     const featuredSection = document.getElementById("featuredSection");
     const searchInput = document.getElementById("searchInput");
     const sortSelect = document.getElementById("sortSelect");
 
     const heroSection = document.getElementById("heroSection");
-    const categoriesSection = document.getElementById("categorii");
-    const brandsSection = document.getElementById("branduri");
     const productsSection = document.getElementById("produse");
     const productPageSection = document.getElementById("productPageSection");
     const productDetailContainer = document.getElementById("productDetailContainer");
@@ -664,8 +573,6 @@
 
     function showCatalogSections() {
       heroSection.style.display = "flex";
-      categoriesSection.style.display = "block";
-      brandsSection.style.display = "block";
       productsSection.style.display = "block";
       featuredSection.style.display = "block";
       productPageSection.classList.remove("show");
@@ -673,8 +580,6 @@
 
     function showProductSection() {
       heroSection.style.display = "none";
-      categoriesSection.style.display = "none";
-      brandsSection.style.display = "none";
       productsSection.style.display = "none";
       featuredSection.style.display = "none";
       productPageSection.classList.add("show");
@@ -697,19 +602,6 @@
 
     function getPublicProducts() {
       return allProducts.filter((product) => product.active === true);
-    }
-
-    function renderPublicBrands() {
-      const activeBrands = allBrands.filter((b) => b.active === true);
-
-      if (!activeBrands.length) {
-        publicBrandsList.innerHTML = `<div class="card"><p>Nu există branduri.</p></div>`;
-        return;
-      }
-
-      publicBrandsList.innerHTML = activeBrands
-        .map((brand) => `<div class="brand-card">${brand.name}</div>`)
-        .join("");
     }
 
     function renderFilters() {
@@ -977,7 +869,6 @@
       try {
         await loadBrands();
         await loadProducts();
-        renderPublicBrands();
         renderFilters();
         renderProducts();
         renderFeaturedProducts();
